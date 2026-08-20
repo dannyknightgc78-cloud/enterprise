@@ -53,7 +53,9 @@ check "Cloud Portal"      "https://cloud.dannygc.cloud"
 check "Hub"               "https://hub.dannygc.cloud"
 check "Main site"         "https://dannygc.cloud"
 
-# AI stack
+# AI stack + GhostGrid (urgent)
+check "GhostGrid"         "https://ghostgrid.dannygc.cloud"
+check "GhostGrid warroom" "https://ghostgrid.dannygc.cloud/warroom"
 check "Ollama / AI"       "https://ai.dannygc.cloud"
 check "Ollama API"        "https://ollama.dannygc.cloud"
 check "API gateway"       "https://api.dannygc.cloud"
