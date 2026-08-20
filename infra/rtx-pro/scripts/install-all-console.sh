@@ -18,7 +18,7 @@ echo "SSH keys: OK"
 
 # 2) Clone/update enterprise repo
 INSTALL_ROOT=/opt/cursor-workers/enterprise
-BRANCH=cursor/rtx-pro-hybrid-relay-4fb3
+BRANCH=main
 if [[ -d "$INSTALL_ROOT/.git" ]]; then
   cd "$INSTALL_ROOT" && git fetch origin && git checkout "$BRANCH" && git pull origin "$BRANCH"
 else

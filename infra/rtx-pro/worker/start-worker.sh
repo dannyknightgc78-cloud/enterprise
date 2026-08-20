@@ -27,20 +27,8 @@ if [[ ! -d "${WORKER_ROOT}/.git" ]]; then
   git clone "${WORKER_REPO_URL:-https://github.com/dannyknightgc78-cloud/enterprise.git}" "${WORKER_ROOT}"
 fi
 
-# Wait for local Nemotron relay before accepting agent sessions
-NIM_URL="${NIM_HEALTH_URL:-http://127.0.0.1:8000/v1/models}"
-echo "Waiting for Nemotron NIM at ${NIM_URL}..."
-for i in $(seq 1 60); do
-  if curl -sf "${NIM_URL}" >/dev/null 2>&1; then
-    echo "Nemotron NIM ready."
-    break
-  fi
-  if [[ "${i}" -eq 60 ]]; then
-    echo "Nemotron NIM not ready after 5 minutes. Start: cd ${INFRA_DIR} && docker compose up -d" >&2
-    exit 1
-  fi
-  sleep 5
-done
+# Wait for RTX AI (Ollama/NIM) — do not block worker if only tunnel serves models
+bash "${SCRIPT_DIR}/wait-for-ai.sh"
 
 export CURSOR_API_KEY
 
