@@ -64,7 +64,7 @@ def _read_mode() -> str:
             return mode
     except OSError:
         pass
-    return "hybrid"
+    return "local"
 
 
 def _write_mode(mode: str) -> None:

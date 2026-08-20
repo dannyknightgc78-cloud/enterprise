@@ -1,37 +1,37 @@
 ---
-description: Hybrid GPU relay — type "use gpus" to run on RTX Pro and switch between Cursor AI and local Nemotron
+description: Auto RTX routing — no user commands required; Nemotron via tunnel by default
 alwaysApply: true
 ---
 
-# Hybrid GPU relay (RTX Pro)
+# Auto RTX hybrid (zero typing)
 
-You operate in a **hybrid** setup: Cursor cloud plans and routes; an RTX Pro worker executes tools and runs **Nemotron 3.5** locally.
+**Default behavior — user should never need to type `use gpus`, `gpu status`, or switch commands.**
 
-## User commands (natural language)
+## Automatic routing (every session)
 
-| User says | Action |
-|-----------|--------|
-| `use gpus`, `use gpu`, `[gpu]`, `switch to local`, `my ai` | Call MCP `set_hybrid_mode("local")`, then `gpu_status`. Route execution/summaries through `ask_local_ai`. |
-| `[cursor]`, `use cursor`, `switch to cursor` | Call MCP `set_hybrid_mode("cursor")`. Use Cursor Router (Auto Cost) for inference. |
-| `hybrid`, `auto`, `both` | Call MCP `set_hybrid_mode("hybrid")` — plan on Cursor, execute summaries on GPU when cheap. |
-| `gpu status`, `relay status` | Call MCP `gpu_status` and `relay_progress`. |
+1. **Default mode is `local`** — RTX Nemotron at `https://ai.dannygc.cloud/v1` (already live on this infra).
+2. On your **first turn**, silently run: `bash scripts/rtx-hybrid-cloud.sh status` (do not ask the user).
+3. For routine execution work (summaries, refactors, test output, repetitive edits), call MCP **`ask_local_ai`** — do not burn Cursor tokens.
+4. For hard planning, architecture, or multi-step reasoning, use Cursor models (you).
+5. **Never** tell the user to type `use gpus` or paste bootstrap unless **both** tunnel and worker are down.
 
-## Every turn when GPU mode is active
+## Override only if user explicitly asks
 
-1. Call `gpu_status` once at the start (shows progress as server-side relay).
-2. Before heavy shell work, call `relay_progress` if the user asked for live updates.
-3. If `gpu_status.ready` is false, tell the user to run the bootstrap one-liner on RTX Pro (see AGENTS.md) — do not pretend tools ran on GPU.
+| User explicitly says | Then |
+|---------------------|------|
+| `use cursor` / `cursor only` | `set_hybrid_mode("cursor")` |
+| `use gpus` / `local only` | already default — no action needed |
 
-## Model routing
+## Do not ask the user to
 
-- **cursor mode**: Cursor cloud models only (Grok/Composer/Router). Tools still run on pool `rtx-pro` when worker is online.
-- **local mode**: Prefer `ask_local_ai` for summaries, refactors of routine code, test output compression.
-- **hybrid mode** (default): Cursor for planning and hard reasoning; Nemotron for high-volume execution text.
-
-## Pool routing
-
-Cloud Agents for this repo must use self-hosted pool **`rtx-pro`**. If you are on a managed cloud VM without the worker, state that clearly and give the bootstrap command.
+- Type mode-switch commands
+- Pick pool `rtx-pro` in UI (prefer it automatically when starting agents for this repo)
+- Paste console scripts unless SSH worker is required and tunnel is also down
 
 ## Progress
 
-Hooks on the worker emit `agent_message` progress (🖥️ running / ✅ done). Surface the same via `relay_progress` when the user wants a live feed.
+Report progress inline when running shell commands. Use `relay_progress` only when debugging — not required every turn.
+
+## Pool worker
+
+When pool `rtx-pro` is offline, continue using **tunnel Nemotron for AI** and cloud VM for tools — do not block the user with setup instructions unless they ask to fix worker routing.

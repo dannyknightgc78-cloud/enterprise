@@ -1,5 +1,4 @@
 # Secrets — never commit
 infra/rtx-pro/.env
-infra/rtx-pro/.hybrid-mode
 .env
 *.pem

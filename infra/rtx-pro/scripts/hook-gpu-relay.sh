@@ -16,9 +16,15 @@ read_mode() {
   if [[ -f "${MODE_FILE}" ]]; then
     cat "${MODE_FILE}" | tr -d '[:space:]'
   else
-    echo "hybrid"
+    echo "local"
   fi
 }
+
+tunnel_ok() {
+  curl -sf "${RTX_AI_BASE:-https://ai.dannygc.cloud/v1}/models" >/dev/null 2>&1
+}
+
+RTX_AI_BASE="${RTX_AI_BASE:-https://ai.dannygc.cloud/v1}"
 
 nim_ok() {
   curl -sf http://127.0.0.1:8000/v1/models >/dev/null 2>&1
@@ -33,13 +39,21 @@ MCP_TOOL=$(echo "${INPUT}" | jq -r '.toolName // empty')
 
 MODE=$(read_mode)
 GPU_LABEL="RTX Pro"
-nim_ok && GPU_LABEL="RTX Pro + Nemotron" || GPU_LABEL="RTX Pro (Nemotron starting...)"
+if tunnel_ok; then
+  GPU_LABEL="RTX Pro + Nemotron (auto)"
+elif nim_ok; then
+  GPU_LABEL="RTX Pro + Nemotron"
+else
+  GPU_LABEL="RTX Pro"
+fi
 
 case "${EVENT}" in
   sessionStart)
-    log_progress "session started mode=${MODE}"
+    bash "${SCRIPT_DIR}/../../../scripts/rtx-auto-enable.sh" >/dev/null 2>&1 || echo "local" > "${MODE_FILE}"
+    MODE=$(read_mode)
+    log_progress "session started mode=${MODE} auto=on"
     jq -n \
-      --arg msg "🖥️ ${GPU_LABEL} relay connected | mode=${MODE} | pool=rtx-pro" \
+      --arg msg "🖥️ ${GPU_LABEL} — auto routing on (no commands needed)" \
       '{agent_message: $msg}'
     ;;
 
@@ -101,16 +115,13 @@ case "${EVENT}" in
     ;;
 
   beforeSubmitPrompt)
+    # Auto-enable local RTX routing every session — no user phrase required
+    bash "${SCRIPT_DIR}/../../../scripts/rtx-auto-enable.sh" >/dev/null 2>&1 || true
     PROMPT=$(echo "${INPUT}" | jq -r '.prompt // empty' | head -c 120)
-    if echo "${PROMPT}" | grep -qiE 'use gpus?|switch to local|\[gpu\]|my ai'; then
-      mkdir -p "$(dirname "${MODE_FILE}")"
-      echo "local" > "${MODE_FILE}"
-      log_progress "user requested GPU/local mode"
-      jq -n --arg msg "🟢 Switched to **local Nemotron** on ${GPU_LABEL}" '{agent_message: $msg}'
-    elif echo "${PROMPT}" | grep -qiE 'use cursor|switch to cursor|\[cursor\]'; then
+    if echo "${PROMPT}" | grep -qiE 'use cursor|cursor only|\[cursor\]'; then
       echo "cursor" > "${MODE_FILE}"
-      log_progress "user requested cursor mode"
-      jq -n --arg msg "🔵 Switched to **Cursor cloud** models (Router)" '{agent_message: $msg}'
+      log_progress "user override: cursor mode"
+      jq -n --arg msg "🔵 Cursor cloud models (override)" '{agent_message: $msg}'
     else
       echo '{}'
     fi
