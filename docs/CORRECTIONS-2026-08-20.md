@@ -49,5 +49,6 @@
   - `bulk-campaign-auto`: continuous campaign drain of unsent contacts every **180s** (`skip_sent=true`).
   - `lead-sync.timer`: sync good leads into mailer contacts every **15 min**.
 - **Nimbus:** leads endpoints intentionally **not** shown in Nimbus Live.
+- **Telegram (2026-08-20):** lead-scraper `alert_lead` posts to Nimbus bot **disabled** (`TELEGRAM_LEADS_ENABLED=0`); scraper/emailer keep running silently.
 - **Report:** `python3 /root/lead-scraper/daily-quota-report.py`
 - **Constraint:** Brevo free plan / daily send capacity is the hard ceiling (blocked/deferred show in aggregated report).
