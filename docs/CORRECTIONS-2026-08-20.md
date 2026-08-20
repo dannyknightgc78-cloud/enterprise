@@ -31,3 +31,12 @@
 - **Fix:** DNS CNAME `ghosts` → `518d4da0-ca44-4df1-a759-6a2941c61d4f.cfargotunnel.com` (proxied). Disabled Hostman ghosts vhost.
 - **G7** moved to `g7.dannygc.cloud` → Hostman `:3015`.
 - **Verify:** title `Ghost Home`; `/api/health` → 200.
+
+## Lead scraper + bulk emailer (24/7 → 50 good/day)
+- **Services always-on:** `lead-scraper`, `lead-feeder`, `auto-emailer`, `batch-emailer` (`Restart=always`).
+- **Quota:** feeder targets **50 good leads/day** (`score>=0.62`, role/corporate, junk filtered). Sleeps when quota met.
+- **Feeder v4:** curated UK seed bank + Bing (+ Brave/crt best-effort). DDG abandoned (dead).
+- **Quality:** drop sentry/wixpress/noreply; higher score gate; RTX scoring URL `127.0.0.1:18001`.
+- **Email:** premium HTML with Portal gallery/home/pricing links + clear **Unsubscribe** CTA; List-Unsubscribe header.
+- **Sync:** hourly → batch-emailer contacts + portal CRM script.
+- **Report:** `python3 /root/lead-scraper/daily-quota-report.py`
