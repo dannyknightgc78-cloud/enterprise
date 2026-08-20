@@ -8,10 +8,10 @@ MODE_FILE="${ROOT}/infra/rtx-pro/.hybrid-mode"
 RTX_AI_BASE="${RTX_AI_BASE:-https://ai.dannygc.cloud/v1}"
 
 mkdir -p "$(dirname "${MODE_FILE}")"
-echo "local" > "${MODE_FILE}"
-echo "local" > /tmp/cursor-hybrid-mode 2>/dev/null || true
+echo "hybrid" > "${MODE_FILE}"
+echo "hybrid" > /tmp/cursor-hybrid-mode 2>/dev/null || true
 
 TUNNEL=down
 curl -sf "${RTX_AI_BASE}/models" >/dev/null 2>&1 && TUNNEL=live
 
-echo "mode=local tunnel=${TUNNEL} endpoint=${RTX_AI_BASE}"
+echo "mode=hybrid tunnel=${TUNNEL} endpoint=${RTX_AI_BASE}"
