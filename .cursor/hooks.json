@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "beforeSubmitPrompt": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "beforeShellExecution": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "afterShellExecution": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "beforeMCPExecution": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "afterMCPExecution": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "preToolUse": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ],
+    "postToolUse": [
+      { "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh" }
+    ]
+  }
+}

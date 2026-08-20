@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "nemotron-gpu": {
+      "command": "python3",
+      "args": ["infra/rtx-pro/mcp/nemotron_gpu_server.py"],
+      "env": {
+        "LITELLM_URL": "http://127.0.0.1:4000/v1/chat/completions",
+        "LITELLM_MASTER_KEY": "sk-rtx-local",
+        "NIM_HEALTH_URL": "http://127.0.0.1:8000/v1/models",
+        "RTX_AI_BASE": "https://ai.dannygc.cloud/v1",
+        "RTX_AI_MODEL": "nemotron-3.5-lightning:latest",
+        "CURSOR_WORKER_POOL_NAME": "rtx-pro"
+      }
+    }
+  }
+}

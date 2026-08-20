@@ -1,0 +1,78 @@
+# RTX Pro hybrid stack: Nemotron 3.5 inference + LiteLLM router + health sidecar.
+# Run on your RTX Pro workstation with NVIDIA Container Toolkit installed.
+#
+# Usage:
+#   cp .env.example .env   # fill in NGC_API_KEY
+#   docker compose up -d
+#
+# Nemotron OpenAI-compatible API: http://127.0.0.1:8000/v1
+# LiteLLM gateway (logical models): http://127.0.0.1:4000/v1
+
+services:
+  nemotron-nim:
+    image: nvcr.io/nim/nvidia/nemotron-3.5-lightning-30b-a3b:latest
+    container_name: nemotron-nim
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      NGC_API_KEY: ${NGC_API_KEY:?Set NGC_API_KEY in .env}
+      NIM_MODEL_PROFILE: ${NIM_MODEL_PROFILE:-nvfp4}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - nemotron-cache:/opt/nim/.cache
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:8000/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm-rtx-router
+    restart: unless-stopped
+    depends_on:
+      nemotron-nim:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ./litellm/config.yaml:/app/config.yaml:ro
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "4"]
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:-sk-rtx-local}
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:4000/health/liveliness"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  relay-health:
+    image: curlimages/curl:8.12.1
+    container_name: rtx-relay-health
+    restart: unless-stopped
+    depends_on:
+      nemotron-nim:
+        condition: service_healthy
+      litellm:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          curl -sf http://nemotron-nim:8000/v1/models >/dev/null \
+            && curl -sf http://litellm:4000/health/liveliness >/dev/null \
+            && echo "$(date -Iseconds) rtx-pro relay OK" \
+            || echo "$(date -Iseconds) rtx-pro relay DEGRADED" >&2
+          sleep 60
+        done
+
+volumes:
+  nemotron-cache:

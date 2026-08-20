@@ -1,0 +1,37 @@
+---
+description: Auto RTX routing — no user commands required; Nemotron via tunnel by default
+alwaysApply: true
+---
+
+# Auto RTX hybrid (zero typing)
+
+**Default behavior — user should never need to type `use gpus`, `gpu status`, or switch commands.**
+
+## Automatic routing (every session)
+
+1. **Default mode is `local`** — RTX Nemotron at `https://ai.dannygc.cloud/v1` (already live on this infra).
+2. On your **first turn**, silently run: `bash scripts/rtx-hybrid-cloud.sh status` (do not ask the user).
+3. For routine execution work (summaries, refactors, test output, repetitive edits), call MCP **`ask_local_ai`** — do not burn Cursor tokens.
+4. For hard planning, architecture, or multi-step reasoning, use Cursor models (you).
+5. **Never** tell the user to type `use gpus` or paste bootstrap unless **both** tunnel and worker are down.
+
+## Override only if user explicitly asks
+
+| User explicitly says | Then |
+|---------------------|------|
+| `use cursor` / `cursor only` | `set_hybrid_mode("cursor")` |
+| `use gpus` / `local only` | already default — no action needed |
+
+## Do not ask the user to
+
+- Type mode-switch commands
+- Pick pool `rtx-pro` in UI (prefer it automatically when starting agents for this repo)
+- Paste console scripts unless SSH worker is required and tunnel is also down
+
+## Progress
+
+Report progress inline when running shell commands. Use `relay_progress` only when debugging — not required every turn.
+
+## Pool worker
+
+When pool `rtx-pro` is offline, continue using **tunnel Nemotron for AI** and cloud VM for tools — do not block the user with setup instructions unless they ask to fix worker routing.

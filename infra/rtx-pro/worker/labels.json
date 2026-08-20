@@ -1,0 +1,8 @@
+{
+  "hardware": "rtx-pro",
+  "gpu": "nvidia",
+  "inference": "nemotron-3.5-lightning",
+  "capabilities": ["docker", "gpu", "local-nim"],
+  "team": "enterprise",
+  "routing": "hybrid-relay"
+}

@@ -1,0 +1,39 @@
+# LiteLLM router on RTX Pro.
+# Exposes stable logical model names for local consumers (hooks, scripts, MCP).
+#
+# execution  -> Nemotron 3.5 Lightning (local GPU, zero API token cost)
+# fast-chat  -> same endpoint, lower max_tokens default via router_settings
+
+model_list:
+  - model_name: execution
+    litellm_params:
+      model: openai/nemotron-3.5-lightning-30b-a3b
+      api_base: http://nemotron-nim:8000/v1
+      api_key: nim-local
+      timeout: 120
+      max_tokens: 8192
+    model_info:
+      mode: chat
+      supports_function_calling: true
+
+  - model_name: fast-chat
+    litellm_params:
+      model: openai/nemotron-3.5-lightning-30b-a3b
+      api_base: http://nemotron-nim:8000/v1
+      api_key: nim-local
+      timeout: 60
+      max_tokens: 4096
+    model_info:
+      mode: chat
+
+router_settings:
+  routing_strategy: simple-shuffle
+  num_retries: 2
+  timeout: 120
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
