@@ -1,26 +1,26 @@
 # Corrections — 2026-08-20
 
-## GhostGrid / services tamper
-- **Cause:** ABX container signing key did not match Aug-11 ledger (`69e9…`).
-- **Fix:** Restored matching Ed25519 keypair from Vultr backup into `abx-staging/keys`; restarted `ghostgrid-abx`.
-- **Result:** `GET /api/abx/verify` → **PASS**; services `ghostgrid_probe` → `tamper: false`.
+## Sentinel / Stratus / Phantom / Voice (urgent)
+- **Cause:** nginx `root /root/stratus/...` → www-data Permission denied → **500** for public clients; previously also mis-proxied to lab C.A.R.L. `:4173`.
+- **Fix:**
+  - Deploy Stratus Sentinel UI to `/var/www/sentinel-ui` (readable by nginx).
+  - `sentinel` + `stratus` → vault UI + `/vault` `/api` → `:8793`, `/voice` `/face` → `:8795`.
+  - `phantom` → `/var/www/phantom-web` (Phantom product, not vault).
+  - `voice` → same Sentinel UI (not C.A.R.L.).
+- **Verify:** titles `Stratus Sentinel — Stratus Vault` / `Phantom`; header `x-sentinel-origin: stratus-ui-dist`.
 
-## Vault (open admin)
-- Added `STRATUS_AUTH_TOKEN` / `NIMBUS_AUTH_TOKEN` to `secrets/lab-vault.env`.
-- Hydrated Stratus vault secrets (17): Cloudflare tokens + RTX hybrid URLs.
-- Catalog folders: Cloudflare, Nimbus, Dev, **RTX Pro AI**.
-- Status: `adminMode=true`, `locked=false`, `integrity.safe=true`.
+## Ghosts
+- `ghosts.dannygc.cloud` → `:3015` **G7 — DannyGC Command Centre** (HTTP 200).
 
-## RTX hybrid wiring
-| Path | How |
-|------|-----|
-| CPU commands | `rtx-hybrid cpu "…"` → SSH `root@172.236.195.90` |
-| LLM | Hostman `:18001` → RTX Ollama (`nemotron-3.5-lightning`, `qwen2.5vl:7b`) |
-| TTS | Hostman `:15500` → RTX Piper `:5500` |
-| Genie | `INFERENCE_BASE_URL=http://127.0.0.1:18001/v1` |
+## Vultr / Trooper scrub (live monitors)
+- Nimbus Live `sites.json` / `servers.json`: no trooper/vultr.
+- `WATCH_DEFAULT_NODE_ID=hostman`
+- `black-alert.json` `ai_target=rtx-pro` (not trooper)
+- `inventory-sync/inventory.json` synced without live trooper/vultr hosts
+- `route_guard` → `guard-hostman-routing.sh`
 
-CLI on Hostman: `rtx-hybrid status|models|chat|cpu|piper`
+## Site audit snapshot
+- 111 hostnames probed; ~50 OK titles; many legacy product hostnames still serve lab SPA titled C.A.R.L. via `:4173`/`:8788` (portalbiz stubs, glucose/arthritis SPA shell, etc.) — not Sentinel.
 
-## Nimbus Live
-- `nimbus.dannygc.cloud` → local monitor `:3099` (Telegram on state change).
-- Does not rely on tunnels for origin checks; also probes public HTTPS.
+## GhostGrid / vault / RTX (earlier)
+- ABX key restored; vault admin open; RTX hybrid CLI wired.
