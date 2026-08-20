@@ -24,3 +24,10 @@
 
 ## GhostGrid / vault / RTX (earlier)
 - ABX key restored; vault admin open; RTX hybrid CLI wired.
+
+## Ghosts (urgent — was wrong)
+- **Wrong:** Hostman A → `/opt/g7-home` `:3015` (G7 Command Centre).
+- **Correct:** Mac **home-edge** tunnel `518d4da0-…` → `127.0.0.1:8850` (**Ghost Home**).
+- **Fix:** DNS CNAME `ghosts` → `518d4da0-ca44-4df1-a759-6a2941c61d4f.cfargotunnel.com` (proxied). Disabled Hostman ghosts vhost.
+- **G7** moved to `g7.dannygc.cloud` → Hostman `:3015`.
+- **Verify:** title `Ghost Home`; `/api/health` → 200.
