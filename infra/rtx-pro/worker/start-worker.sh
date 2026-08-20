@@ -5,6 +5,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INFRA_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export PATH="${HOME:-/root}/.local/bin:/usr/local/bin:${PATH}"
 
 # shellcheck source=/dev/null
 [[ -f "${INFRA_DIR}/.env" ]] && source "${INFRA_DIR}/.env"

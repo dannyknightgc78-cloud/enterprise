@@ -51,6 +51,8 @@ Type=simple
 Restart=always
 RestartSec=10
 WorkingDirectory=${INSTALL_ROOT}
+Environment=HOME=/root
+Environment=PATH=/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 EnvironmentFile=${INSTALL_ROOT}/infra/rtx-pro/.env
 ExecStart=${INSTALL_ROOT}/infra/rtx-pro/worker/start-worker.sh
 
