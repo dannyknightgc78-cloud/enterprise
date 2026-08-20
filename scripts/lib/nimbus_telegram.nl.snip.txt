@@ -1,0 +1,205 @@
+
+
+
+def build_fix_ghosts_home_report() -> str:
+    """Ensure ghosts.dannygc.cloud is Mac Ghost Home (home-edge), not G7 Command Centre."""
+    import json, urllib.request
+    from pathlib import Path as _P
+    lines = ["👻 <b>Ghosts Home</b>", ""]
+    try:
+        req = urllib.request.Request("https://ghosts.dannygc.cloud/", headers={"User-Agent": "NimbusNL/1.0"})
+        with urllib.request.urlopen(req, timeout=15) as res:
+            body = res.read(2500).decode("utf-8", "ignore")
+        title = ""
+        import re as _re
+        m = _re.search(r"<title>([^<]+)", body, _re.I)
+        title = (m.group(1) if m else "").strip()
+        ok = "ghost home" in title.lower()
+        lines.append(("✅" if ok else "⚠️") + f" title: <code>{_esc(title)}</code>")
+        hreq = urllib.request.Request("https://ghosts.dannygc.cloud/api/health", headers={"User-Agent": "NimbusNL/1.0"})
+        health = json.loads(urllib.request.urlopen(hreq, timeout=15).read().decode())
+        lines.append(f"platform: <code>{_esc(str(health.get('platform')))}</code> · aether={health.get('aether_ready')}")
+        if ok:
+            lines.append("")
+            lines.append("Ghosts is on <b>Mac Ghost Home</b> (home-edge tunnel).")
+            lines.append("G7 Command Centre is separate: <code>g7.dannygc.cloud</code>")
+        else:
+            lines.append("")
+            lines.append("Not Ghost Home — run DNS/tunnel repair on Hostman.")
+    except Exception as exc:
+        lines.append(f"✗ probe failed: {_esc(str(exc)[:200])}")
+    return "\n".join(lines)
+
+
+def build_services_monitor_report() -> str:
+    return (
+        "📡 <b>Nimbus / Services monitor</b>\n\n"
+        "• <code>https://nimbus.dannygc.cloud</code>\n"
+        "• <code>https://services.dannygc.cloud</code>\n\n"
+        "Live fleet + site board (Hostman). Telegram gate removed from services."
+    )
+
+
+def build_quiet_route_guard_report() -> str:
+    return (
+        "🔇 <b>Route guard Telegram</b>\n\n"
+        "Portal misroute Telegram pages are <b>off</b> "
+        "(<code>ROUTE_GUARD_TELEGRAM=0</code>).\n"
+        "Public cloud/dashboard still monitored; false Connection-refused spam stopped."
+    )
+
+
+def build_scorecard_report() -> str:
+    """Run empire-green-scorecard.sh and return HTML summary (no Telegram spam)."""
+    load_env()
+    root = _repo_root()
+    script = root / "scripts" / "empire-green-scorecard.sh"
+    if re.search(r"\bservices\.dannygc\b|\bservices site\b", low):
+        return "services"
+    return "stack"
+
+
+
+# --- Natural language extras (Hostman 2026-08-20) ---
+_NL_GHOSTS_HOME = re.compile(
+    r"(?:^|\b)(?:"
+    r"fix\s+ghosts?(?:\s+home)?|"
+    r"ghosts?(?:\s+home)?\s+(?:is\s+)?(?:wrong|broken|down|misrouted)|"
+    r"(?:why\s+is\s+)?ghosts?(?:\s+home)?\s+(?:wrong|broken)|"
+    r"restore\s+ghosts?(?:\s+home)?|"
+    r"point\s+ghosts?\s+(?:at|to)\s+(?:mac|home[- ]?edge|ghost\s*home)"
+    r")(?:\b|$)",
+    re.I,
+)
+_NL_STATUS_PLAIN = re.compile(
+    r"(?:^|\b)(?:"
+    r"how(?:'\s*)?s\s+(?:the\s+)?(?:lab|empire|stack|fleet)|"
+    r"is\s+everything\s+(?:ok|okay|fine|up|green)|"
+    r"what(?:'\s*)?s\s+(?:down|broken|failing)|"
+    r"any\s+(?:outages?|problems?|issues?)|"
+    r"give\s+me\s+(?:a\s+)?(?:status|update|report)|"
+    r"check\s+(?:the\s+)?(?:sites?|servers?|fleet)"
+    r")(?:\b|$)",
+    re.I,
+)
+_NL_ROUTE_GUARD_QUIET = re.compile(
+    r"(?:^|\b)(?:"
+    r"stop\s+(?:the\s+)?(?:route\s*guard|portal)\s+alerts?|"
+    r"quiet\s+(?:route\s*guard|nimbus)|"
+    r"stop\s+spamming\s+(?:me\s+)?(?:about\s+)?(?:cloud|dashboard|portals?)"
+    r")(?:\b|$)",
+    re.I,
+)
+_NL_SERVICES_MONITOR = re.compile(
+    r"(?:^|\b)(?:"
+    r"open\s+(?:the\s+)?(?:services?|nimbus)\s+monitor|"
+    r"(?:services?|nimbus)\s+(?:dashboard|monitor|status\s+page)|"
+    r"show\s+(?:me\s+)?(?:the\s+)?(?:fleet|empire)\s+monitor"
+    r")(?:\b|$)",
+    re.I,
+)
+
+def parse_user_intent(text: str) -> str:
+    """Map Telegram text → intent including emergency|commands|authorize|server_op."""
+    raw = (text or "").strip()
+    low = raw.lower()
+    if _NL_GHOSTS_HOME.search(low):
+        return "fix-ghosts-home"
+    if _NL_ROUTE_GUARD_QUIET.search(low):
+        return "quiet-route-guard"
+    if _NL_SERVICES_MONITOR.search(low):
+        return "services-monitor"
+    if _NL_STATUS_PLAIN.search(low):
+        return "status"
+    t = text.strip()
+    if not t:
+        return "unknown"
+
+    # /protect* is its own intent (not generic server_op)
+    if t.lower().startswith("/protect") or t.lower().split()[:1] == ["protect"]:
+        return "protect"
+    low0 = t.lower().lstrip("/")
+    if low0.startswith("harden ") or low0 in {"harden", "firewall"} or low0.startswith("firewall "):
+def _help_text() -> str:
+    return (
+        "📡 <b>Nimbusfixbot</b> — lab ops (not C.A.R.L. Guard)\n\n"
+        "<b>Commands</b>\n"
+        "/scan — live full scan (sites · agents · tunnels)\n"
+        "/status — cached empire report\n"
+        "/report · /diagnostics — full diagnostics (+ file under dashboard-data/ops)\n"
+        "/redalert on|off [msg] — empire Star Trek red-alert overlay\n"
+        "/blackalert on|off|sync — edge-02/03 down → all AI on Trooper\n"
+        "/backup — lattice backup status (dashboard-data tar targets)\n"
+        "/snapshot — self-hosted server snapshot status\n"
+        "/serversnapshot — run weekly tar snapshot (+ R2 · Telegram notify)\n"
+        "/snapshot server — alias for /serversnapshot (optional: trooper · vultr · all · dry-run)\n"
+        "/vmsnapshot — provider full-VM status (Vultr API · Linode edge-03)\n"
+        "/vmsnapshot vultr|edge-03|all — create provider snapshot\n"
+        "/vmsnapshot list · /vmsnapshot restore — list / restore help\n"
+        "/fix — full stack repair on Hostman (alias /heal /repair)\n"
+        "/fix tunnel — restart cloudflared + Trooper origin\n"
+        "/fix lab — heal lab + Trooper origin\n"
+        "/fix services — services.dannygc.cloud nginx + tunnel ingress\n"
+        "/nodes — empire maintainer nodes + URLs\n"
+        "/os-update SERVER — apt/dpkg system upgrade (Linux; /update = scripts only)\n"
+        "/update-os SERVER — alias for /os-update SERVER\n"
+        "/lastfix — recent fix outcomes (JSONL log)\n"
+        "/fixhint [text] — prior successful fix for similar error\n"
+        "/learned [text] — curated false positives + known fixes\n"
+        "/learn SIG | ACTION — remember a pattern\n"
+        "/web QUERY — search the web (empire search → DuckDuckGo)\n"
+        "/web fetch URL — fetch public docs (text only)\n"
+        "/commands — this command list\n"
+        "/authorize — IDE change-auth protocol (Cursor · Trae · Roo · pear-coder)\n"
+        "/voice-enroll — enroll your voice (reply with 5–10s sample)\n"
+        "/voice-status — enrollment + last verify result\n"
+        "/voice-auth on|off — toggle voice gate for destructive commands\n"
+        "/addnode {json} — register remote hub (see /nodes example)\n"
+        "/server add &lt;id&gt; &lt;ip&gt; [label] — add by IP\n"
+        "/removenode &lt;id&gt; [confirm TOKEN] — decommission testing GPU (aliases: /server remove lab-gpu|gpu-new1|staging)\n"
+        "/purgewatches [name …] — purge dead auto-watch containers (post GPU/server remove)\n"
+        "/provision approve &lt;code&gt; — approve staged server migration\n"
+        "/chatid — this chat id\n\n"
+        "<b>Aliases</b> /heal · /repair\n\n"
+        "<b>Plain English</b>\n"
+        "• “full scan all web apps”\n"
+        "• “check all sites and tunnels”\n"
+        "• “fix tunnel” · “heal lab” · “repair everything”\n"
+        "• “emergency fix” · “system recovery”\n"
+        "• “is daily backup done?”\n"
+        "• “full server snapshot” · “snapshot trooper” · “snapshot vultr”\n"
+        "• “Nimbus omega red OLD_IP” — sets pending; reply OMEGA RED NOW (never automatic)\n"
+        f"• After scrub: reply {OMEGA_DELETE_PHRASE} to remove Vultr VM (optional)\n"
+        "• “Captain force backup” — LAST RESORT; sets pending; reply CAPTAIN BACKUP NOW\n"
+        "• “Captain kill switch HOST” — LAST RESORT; password then phrase (or phrase then password)\n"
+        "• “snapshot all” · “heal hostman” · “tunnel check trooper” (voice or text)\n"
+        "• “update os all servers” · “patch vultr” — OS apt upgrade (reply UPDATE OS NOW for all)\n"
+        "• “update trooper” · “update trooper server” — rsync scripts (not OS packages)\n"
+        "• Voice notes — 🎤 transcribed via Whisper; destructive ops need enrolled voice\n"
+        "• /voice-enroll then 5–10s sample — speaker verify before captain-kill · omega-red\n"
+        "• “system status”\n\n"
+        "<b>Snapshot types</b>\n"
+        "• /backup — lattice data backups (ops-agent targets)\n"
+        "• /serversnapshot — self-hosted tar on our servers (not Linode/Vultr block snapshots)\n\n"
+        "/fix SSHes to Vultr. /emergency runs Mac tunnel + nimbus + heal locally. "
+        "Scan hits public URLs + local :8787/:8788/:4173 probes."
+    )
+
+
+def handle_command(text: str, chat_id: int | str) -> str:
+    intent = parse_user_intent(text)
+    if intent == "help":
+        return _help_text()
+    if intent == "commands":
+        return build_commands_report()
+    if intent == "scorecard":
+        return build_scorecard_report()
+    if intent == "fix-ghosts-home":
+        return build_fix_ghosts_home_report()
+    if intent == "services-monitor":
+        return build_services_monitor_report()
+    if intent == "quiet-route-guard":
+        return build_quiet_route_guard_report()
+    if intent == "tunnel":
+        return build_tunnel_report()
+    if intent == "apps":

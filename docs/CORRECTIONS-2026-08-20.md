@@ -9,9 +9,6 @@
   - `voice` → same Sentinel UI (not C.A.R.L.).
 - **Verify:** titles `Stratus Sentinel — Stratus Vault` / `Phantom`; header `x-sentinel-origin: stratus-ui-dist`.
 
-## Ghosts
-- `ghosts.dannygc.cloud` → `:3015` **G7 — DannyGC Command Centre** (HTTP 200).
-
 ## Vultr / Trooper scrub (live monitors)
 - Nimbus Live `sites.json` / `servers.json`: no trooper/vultr.
 - `WATCH_DEFAULT_NODE_ID=hostman`
@@ -30,12 +27,23 @@
 ## GhostGrid / vault / RTX (earlier)
 - ABX key restored; vault admin open; RTX hybrid CLI wired.
 
-## Ghosts (urgent — was wrong)
+## Ghosts (urgent — was wrong → fixed)
 - **Wrong:** Hostman A → `/opt/g7-home` `:3015` (G7 Command Centre).
 - **Correct:** Mac **home-edge** tunnel `518d4da0-…` → `127.0.0.1:8850` (**Ghost Home**).
-- **Fix:** DNS CNAME `ghosts` → `518d4da0-ca44-4df1-a759-6a2941c61d4f.cfargotunnel.com` (proxied). Disabled Hostman ghosts vhost.
+- **Fix:** DNS CNAME `ghosts` → `518d4da0-ca44-4df1-a759-6a2941c61d4f.cfargotunnel.com` (proxied). Disabled Hostman ghosts vhost (`ghosts…conf.disabled-ghosthome-20260820`).
 - **G7** moved to `g7.dannygc.cloud` → Hostman `:3015`.
-- **Verify:** title `Ghost Home`; `/api/health` → 200.
+- **Live verify (2026-08-20):** title `Ghost Home`; health `platform=mac+phone`, `aether_ready=true`.
+- **Telegram:** plain English “fix ghosts home” / “why is ghosts home not fixed” → probe + auto-repair DNS/nginx if misrouted.
+- If a phone still shows G7: hard-refresh / clear Cloudflare cache — edge is already Ghost Home.
+
+## Nimbus / services monitor (bigger board)
+- `nimbus.dannygc.cloud` + `services.dannygc.cloud` → Hostman `:3099` (`/opt/nimbus-live`).
+- UI: fleet health %, attention rail, key-host chips (ghosts/g7/sentinel/…), filter, infra + lead/emailer pulse, plain-English Telegram tip.
+- `sites.json` expect for ghosts tightened to `Ghost Home` (no longer accepts G7 title as OK).
+
+## Telegram plain English
+- `@Nimbusfixbot` accepts normal language: status, ghosts fix, services monitor, quiet route-guard, full scan, heal, etc.
+- Help `/commands` lists Plain English examples first.
 
 ## Lead scraper + bulk emailer (24/7 → 50 good/day)
 - **Services always-on:** `lead-scraper`, `lead-feeder`, `auto-emailer`, `batch-emailer`, `bulk-campaign-auto` (`Restart=always`).

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NIMBUS — Empire Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg0:#041018; --bg1:#0a1a24; --panel:#0c1e2a;
+  --line:rgba(94,234,212,.16); --text:#e8f4f8; --muted:#7a9aab;
+  --ok:#3dffa8; --bad:#ff5c6c; --warn:#ffb84d; --accent:#5eead4; --accent2:#38bdf8;
+  --glow:rgba(94,234,212,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg0);color:var(--text);
+  font-family:"IBM Plex Sans",system-ui,sans-serif}
+body{
+  background:
+    radial-gradient(1100px 640px at 8% -12%, rgba(56,189,248,.20), transparent 55%),
+    radial-gradient(900px 520px at 92% 4%, rgba(61,255,168,.12), transparent 48%),
+    radial-gradient(700px 400px at 50% 110%, rgba(94,234,212,.08), transparent 55%),
+    linear-gradient(168deg, #041018 0%, #0a1a24 42%, #06141c 100%);
+  overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.28;
+  background-image:
+    linear-gradient(rgba(94,234,212,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94,234,212,.05) 1px, transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse at 50% 15%, #000 18%, transparent 72%);
+}
+.wrap{position:relative; z-index:1; max-width:1440px; margin:0 auto; padding:24px 22px 72px}
+.hero{display:grid; gap:12px; padding:10px 0 22px; animation:rise .65s ease both}
+.brand-row{display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:16px}
+.brand{
+  font-family:"Space Grotesk",sans-serif; font-weight:700; letter-spacing:.18em;
+  font-size:clamp(2.6rem,7vw,4.6rem); line-height:.92; margin:0;
+  background:linear-gradient(105deg,#fff 8%, var(--accent) 52%, var(--accent2) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 28px var(--glow));
+}
+.tag{color:var(--muted); max-width:46rem; font-size:1.02rem; line-height:1.55; margin:0}
+.live{
+  display:inline-flex; align-items:center; gap:8px; width:fit-content;
+  padding:7px 13px; border:1px solid var(--line); border-radius:999px;
+  background:rgba(13,31,43,.72); font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);animation:pulse 1.6s ease-in-out infinite}
+.score{
+  min-width:150px; text-align:right; animation:rise .75s ease both;
+}
+.score b{
+  display:block; font-family:"Space Grotesk",sans-serif; font-size:2.4rem; line-height:1;
+  color:var(--ok);
+}
+.score span{color:var(--muted); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase}
+.stats{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; margin:4px 0 18px}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{
+  background:linear-gradient(160deg, rgba(17,42,56,.92), rgba(8,22,30,.96));
+  border:1px solid var(--line); border-radius:16px; padding:15px 16px;
+  position:relative; overflow:hidden; animation:rise .8s ease both;
+}
+.stat:nth-child(2){animation-delay:.04s}.stat:nth-child(3){animation-delay:.08s}
+.stat:nth-child(4){animation-delay:.12s}.stat:nth-child(5){animation-delay:.16s}.stat:nth-child(6){animation-delay:.2s}
+.stat::after{content:""; position:absolute; inset:auto -18% -42% auto; width:110px; height:110px;
+  background:radial-gradient(circle, rgba(94,234,212,.18), transparent 70%); pointer-events:none}
+.stat b{display:block; font-family:"Space Grotesk",sans-serif; font-size:1.75rem; font-weight:700}
+.stat span{color:var(--muted); font-size:.74rem; letter-spacing:.04em; text-transform:uppercase}
+.stat.bad b{color:var(--bad)}.stat.warn b{color:var(--warn)}
+.sysrow,.keyrow{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.chip,.key{
+  padding:9px 12px; border-radius:12px; border:1px solid var(--line);
+  background:rgba(8,22,30,.85); font-size:.8rem; animation:rise .85s ease both;
+}
+.chip strong,.key strong{color:var(--accent); font-family:"Space Grotesk",sans-serif}
+.key{min-width:180px; flex:1 1 180px}
+.key .meta{display:block; margin-top:4px; color:var(--muted); font-size:.72rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:0 0 14px;
+}
+.toolbar input,.toolbar select{
+  background:rgba(8,22,30,.9); border:1px solid var(--line); color:var(--text);
+  border-radius:12px; padding:10px 12px; font:inherit; min-width:180px;
+}
+.toolbar input{flex:1 1 220px}
+.toolbar .hint{color:var(--muted); font-size:.78rem}
+.layout{display:grid; grid-template-columns:1.35fr .85fr; gap:16px}
+@media(max-width:1080px){.layout{grid-template-columns:1fr}}
+.panel{
+  background:linear-gradient(165deg, rgba(13,31,43,.94), rgba(6,16,24,.97));
+  border:1px solid var(--line); border-radius:18px; padding:18px; min-height:460px;
+  box-shadow:0 22px 60px rgba(0,0,0,.38); animation:rise .9s ease both;
+}
+.panel h2{
+  margin:0 0 14px; font-family:"Space Grotesk",sans-serif; font-size:1.05rem;
+  letter-spacing:.07em; text-transform:uppercase; color:#c9e7ef;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+}
+.panel h2 em{font-style:normal; color:var(--muted); font-size:.75rem; letter-spacing:.04em; text-transform:none; font-family:"IBM Plex Sans",sans-serif}
+.attention{
+  border:1px solid rgba(255,92,108,.28);
+  background:linear-gradient(160deg, rgba(48,16,22,.55), rgba(13,31,43,.9));
+  margin-bottom:16px; min-height:0;
+}
+.attention.empty{display:none}
+.attention h2{color:#ffd0d6}
+.table-wrap{overflow:auto; max-height:58vh}
+table{width:100%; border-collapse:collapse; font-size:.86rem}
+th,td{padding:10px 8px; border-bottom:1px solid rgba(94,234,212,.08); text-align:left; vertical-align:top}
+th{color:var(--muted); font-weight:600; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; position:sticky; top:0; background:#0d1f2b}
+tr{transition:background .2s ease}
+tr:hover{background:rgba(94,234,212,.045)}
+.pill{display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px; font-size:.68rem; font-weight:700; letter-spacing:.04em}
+.OK{background:rgba(61,255,168,.12); color:var(--ok); border:1px solid rgba(61,255,168,.25)}
+.DOWN,.ORIGIN_DOWN,.SSH_FAIL{background:rgba(255,92,108,.12); color:var(--bad); border:1px solid rgba(255,92,108,.28)}
+.WRONG_APP,.CHECK{background:rgba(255,184,77,.12); color:var(--warn); border:1px solid rgba(255,184,77,.28)}
+.host{font-weight:600; color:#f2fbff}
+.meta{color:var(--muted); font-size:.78rem}
+.side-stack{display:grid; gap:16px}
+footer{margin-top:22px; color:var(--muted); font-size:.78rem; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+a{color:var(--accent2); text-decoration:none}
+.tg{
+  margin-top:18px; padding:14px 16px; border-radius:14px; border:1px dashed var(--line);
+  color:var(--muted); font-size:.86rem; line-height:1.5; animation:rise 1s ease both;
+}
+.tg b{color:var(--text)}
+@keyframes pulse{0%,100%{opacity:1; transform:scale(1)}50%{opacity:.45; transform:scale(.85)}}
+@keyframes rise{from{opacity:0; transform:translateY(12px)}to{opacity:1; transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="live"><span class="dot"></span> Live empire watch</div>
+    <div class="brand-row">
+      <h1 class="brand">NIMBUS</h1>
+      <div class="score"><b id="healthScore">—</b><span>fleet health</span></div>
+    </div>
+    <p class="tag">Bigger board for Hostman: attention rail for failures, key product hosts, infra pulse, public + origin probes, passwordless SSH. Telegram on real state changes — talk to @Nimbusfixbot in plain English.</p>
+  </header>
+
+  <section class="stats" id="stats"></section>
+  <section class="sysrow" id="sys"></section>
+  <section class="keyrow" id="keys"></section>
+
+  <div class="toolbar">
+    <input id="q" type="search" placeholder="Filter hosts…" autocomplete="off"/>
+    <select id="filter">
+      <option value="all">All statuses</option>
+      <option value="bad">Problems only</option>
+      <option value="OK">OK</option>
+      <option value="DOWN">DOWN</option>
+      <option value="ORIGIN_DOWN">ORIGIN_DOWN</option>
+      <option value="WRONG_APP">WRONG_APP</option>
+      <option value="CHECK">CHECK</option>
+      <option value="SSH_FAIL">SSH_FAIL</option>
+    </select>
+    <span class="hint">Auto-refresh 20s · services + nimbus share this board</span>
+  </div>
+
+  <section class="panel attention" id="attention">
+    <h2>Needs attention <em id="attnMeta">—</em></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Status</th><th>Host</th><th>Public</th><th>Origin</th><th>Signal</th></tr></thead>
+      <tbody id="attnBody"></tbody>
+    </table></div>
+  </section>
+
+  <section class="layout">
+    <div class="panel">
+      <h2>All sites <em id="sitesMeta">scanning…</em></h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Status</th><th>Host</th><th>Public</th><th>Origin</th><th>Signal</th></tr></thead>
+        <tbody id="sites"></tbody>
+      </table></div>
+    </div>
+    <div class="side-stack">
+      <div class="panel">
+        <h2>Servers <em>passwordless SSH</em></h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Status</th><th>Node</th><th>Host</th><th>Detail</th></tr></thead>
+          <tbody id="servers"></tbody>
+        </table></div>
+      </div>
+      <div class="panel" style="min-height:0">
+        <h2>Ops pulse <em>Hostman</em></h2>
+        <div id="pulse" class="meta">Loading…</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tg">
+    <b>Telegram plain English</b> — try: “is everything ok”, “whats down”, “fix ghosts home”,
+    “why is ghosts home not fixed”, “open the services monitor”, “stop route guard alerts”, “full scan”.
+  </div>
+
+  <footer>
+    <span>Hostman origin 195.133.93.104 · nimbus.dannygc.cloud · services.dannygc.cloud</span>
+    <span><a href="/api/status">/api/status</a> · <a href="https://ghosts.dannygc.cloud">ghosts</a> · <a href="https://g7.dannygc.cloud">g7</a></span>
+  </footer>
+</div>
+<script>
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const order = {DOWN:0,ORIGIN_DOWN:1,SSH_FAIL:1,WRONG_APP:2,CHECK:3,OK:4};
+const KEY_HOSTS = [
+  'ghosts.dannygc.cloud','g7.dannygc.cloud','sentinel.dannygc.cloud',
+  'nimbus.dannygc.cloud','services.dannygc.cloud','cloud.dannygc.cloud','dashboard.dannygc.cloud'
+];
+let CACHE = null;
+
+function siteRow(x){
+  return `<tr>
+    <td><span class="pill ${esc(x.status)}">${esc(x.status)}</span></td>
+    <td class="host">${esc(x.host)}</td>
+    <td>${esc(x.public)}</td><td>${esc(x.local)}</td>
+    <td class="meta">${esc(x.public_title||x.local_title||x.detail||'')}</td>
+  </tr>`;
+}
+
+function render(){
+  if(!CACHE) return;
+  const d = CACHE;
+  const s = d.summary || {};
+  const sites = [...(d.sites||[])];
+  const total = sites.length || 1;
+  const health = Math.round(100 * (s.sites_ok||0) / total);
+  const hs = document.getElementById('healthScore');
+  hs.textContent = health + '%';
+  hs.style.color = health >= 95 ? 'var(--ok)' : health >= 80 ? 'var(--warn)' : 'var(--bad)';
+
+  const wrong = sites.filter(x => x.status === 'WRONG_APP').length;
+  const down = sites.filter(x => x.status === 'DOWN' || x.status === 'ORIGIN_DOWN').length;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><b>${s.sites_ok||0}/${sites.length}</b><span>Sites OK</span></div>
+    <div class="stat ${down?'bad':''}"><b>${down}</b><span>Down / origin</span></div>
+    <div class="stat ${wrong?'warn':''}"><b>${wrong}</b><span>Wrong app</span></div>
+    <div class="stat"><b>${s.servers_ok||0}/${(d.servers||[]).length}</b><span>Servers OK</span></div>
+    <div class="stat ${(s.servers_bad||0)?'bad':''}"><b>${s.servers_bad||0}</b><span>SSH fail</span></div>
+    <div class="stat"><b style="font-size:.95rem">${esc((d.updated_at||'-').replace('T',' ').replace('Z',''))}</b><span>Updated UTC</span></div>`;
+
+  const infra = d.infra || {};
+  document.getElementById('sys').innerHTML = [
+    ['cloudflared', infra.cloudflared],
+    ['nginx', infra.nginx],
+    ['watchdog', infra.watchdog],
+    ['tunnel HA', infra.tunnel_ha],
+    ['lead scraper', infra.lead_scraper],
+    ['auto emailer', infra.auto_emailer],
+  ].map(([k,v]) => `<div class="chip"><strong>${esc(k)}</strong> · ${esc(v||'-')}</div>`).join('');
+
+  const byHost = Object.fromEntries(sites.map(x => [x.host, x]));
+  document.getElementById('keys').innerHTML = KEY_HOSTS.map(h => {
+    const x = byHost[h] || {status:'—', public_title:'not in board', detail:''};
+    return `<div class="key"><strong>${esc(h.split('.')[0])}</strong>
+      <span class="pill ${esc(x.status)}" style="margin-left:8px">${esc(x.status)}</span>
+      <span class="meta">${esc(x.public_title||x.local_title||x.detail||h)}</span></div>`;
+  }).join('');
+
+  const q = (document.getElementById('q').value || '').trim().toLowerCase();
+  const f = document.getElementById('filter').value;
+  const filtered = sites.filter(x => {
+    if(q && !String(x.host).toLowerCase().includes(q) && !String(x.public_title||'').toLowerCase().includes(q)) return false;
+    if(f === 'all') return true;
+    if(f === 'bad') return x.status !== 'OK';
+    return x.status === f;
+  }).sort((a,b)=> (order[a.status]??9)-(order[b.status]??9) || a.host.localeCompare(b.host));
+
+  const bad = sites.filter(x => x.status !== 'OK').sort((a,b)=> (order[a.status]??9)-(order[b.status]??9));
+  const attn = document.getElementById('attention');
+  if(!bad.length){ attn.classList.add('empty'); }
+  else {
+    attn.classList.remove('empty');
+    document.getElementById('attnMeta').textContent = bad.length + ' hosts';
+    document.getElementById('attnBody').innerHTML = bad.map(siteRow).join('');
+  }
+
+  document.getElementById('sitesMeta').textContent = `${filtered.length} shown · ${sites.filter(x=>x.status==='OK').length} healthy`;
+  document.getElementById('sites').innerHTML = filtered.map(siteRow).join('') || '<tr><td colspan=5 class="meta">No matches</td></tr>';
+  document.getElementById('servers').innerHTML = (d.servers||[]).map(x => `<tr>
+    <td><span class="pill ${esc(x.status)}">${esc(x.status)}</span></td>
+    <td class="host">${esc(x.id)}</td>
+    <td>${esc(x.host)}</td>
+    <td class="meta">${esc(x.detail||'')}</td>
+  </tr>`).join('') || '<tr><td colspan=4 class="meta">No servers</td></tr>';
+
+  const pulse = d.pulse || {};
+  document.getElementById('pulse').innerHTML = [
+    `Ghosts expect: <b style="color:var(--text)">Ghost Home</b> (Mac home-edge)`,
+    `G7 separate: <b style="color:var(--text)">g7.dannygc.cloud</b>`,
+    `Route-guard Telegram: <b style="color:var(--text)">${esc(pulse.route_guard_telegram || 'off')}</b>`,
+    `Lead posts to Nimbus: <b style="color:var(--text)">${esc(pulse.lead_telegram || 'off')}</b>`,
+    `Cycle: every ${esc(pulse.interval_sec || '60')}s`,
+  ].map(t => `<div style="margin:6px 0">${t}</div>`).join('');
+}
+
+async function load(){
+  const d = await fetch('/api/status').then(r=>r.json());
+  CACHE = d;
+  render();
+}
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('filter').addEventListener('change', render);
+load(); setInterval(load, 20000);
+</script>
+</body>
+</html>

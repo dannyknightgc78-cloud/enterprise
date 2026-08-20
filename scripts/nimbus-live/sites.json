@@ -1,0 +1,537 @@
+[
+  {
+    "host": "ai.dannygc.cloud",
+    "url": "https://ai.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "api.dannygc.cloud",
+    "url": "https://api.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "arthritis.dannygc.cloud",
+    "url": "https://arthritis.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "arthritis.dannyk.online",
+    "url": "https://arthritis.dannyk.online/",
+    "expect": "."
+  },
+  {
+    "host": "automations.cloudsit.app",
+    "url": "https://automations.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "billing.cloudsit.app",
+    "url": "https://billing.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "bottleneck.cloudsit.app",
+    "url": "https://bottleneck.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "butler.dannygc.cloud",
+    "url": "https://butler.dannygc.cloud/",
+    "expect": "BUTLER|butler"
+  },
+  {
+    "host": "calendar.cloudsit.app",
+    "url": "https://calendar.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "carl.dannygc.cloud",
+    "url": "https://carl.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "cloud.dannygc.cloud",
+    "url": "https://cloud.dannygc.cloud/",
+    "expect": "CloudIt"
+  },
+  {
+    "host": "cloudit.cloudsit.app",
+    "url": "https://cloudit.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "cloudit.dannygc.cloud",
+    "url": "https://cloudit.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "cloudme.cloudsit.app",
+    "url": "https://cloudme.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "cloudme.dannygc.cloud",
+    "url": "https://cloudme.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "cloudsit.app",
+    "url": "https://cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "code.dannygc.cloud",
+    "url": "https://code.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "coder.dannygc.cloud",
+    "url": "https://coder.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "comfy.cloudsit.app",
+    "url": "https://comfy.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "comfy.dannygc.cloud",
+    "url": "https://comfy.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "comms.cloudsit.app",
+    "url": "https://comms.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "crm.cloudsit.app",
+    "url": "https://crm.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "dannygc.cloud",
+    "url": "https://dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "dannyk.online",
+    "url": "https://dannyk.online/",
+    "expect": "."
+  },
+  {
+    "host": "dashboard.dannygc.cloud",
+    "url": "https://dashboard.dannygc.cloud/",
+    "expect": "DannyGC Hub|Command Centre|Photobooth"
+  },
+  {
+    "host": "desktop.cloudsit.app",
+    "url": "https://desktop.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "desktop.dannygc.cloud",
+    "url": "https://desktop.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "edge-02-hub.dannygc.cloud",
+    "url": "https://edge-02-hub.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "edge-03-hub.dannygc.cloud",
+    "url": "https://edge-03-hub.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "enrichment.cloudsit.app",
+    "url": "https://enrichment.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "fillit.cloudsit.app",
+    "url": "https://fillit.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "fillit.dannygc.cloud",
+    "url": "https://fillit.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "geek.cloudsit.app",
+    "url": "https://geek.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "geek.dannygc.cloud",
+    "url": "https://geek.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "genie.dannygc.cloud",
+    "url": "https://genie.dannygc.cloud/",
+    "expect": "Genie"
+  },
+  {
+    "host": "ghostgrid.dannygc.cloud",
+    "url": "https://ghostgrid.dannygc.cloud/",
+    "expect": "GhostGrid|ABX"
+  },
+  {
+    "host": "ghostroute.cloudsit.app",
+    "url": "https://ghostroute.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "ghosts.dannygc.cloud",
+    "url": "https://ghosts.dannygc.cloud/",
+    "expect": "Ghost Home"
+  },
+  {
+    "host": "glucose.dannygc.cloud",
+    "url": "https://glucose.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "glucose.dannyk.online",
+    "url": "https://glucose.dannyk.online/",
+    "expect": "."
+  },
+  {
+    "host": "gpu.dannygc.cloud",
+    "url": "https://gpu.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "gridview.cloudsit.app",
+    "url": "https://gridview.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "haven.dannygc.cloud",
+    "url": "https://haven.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "health.dannyk.online",
+    "url": "https://health.dannyk.online/",
+    "expect": "."
+  },
+  {
+    "host": "hub.dannygc.cloud",
+    "url": "https://hub.dannygc.cloud/",
+    "expect": "DannyGC Hub|Command Centre"
+  },
+  {
+    "host": "jellyblaze.cloudsit.app",
+    "url": "https://jellyblaze.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "jellyblaze.dannygc.cloud",
+    "url": "https://jellyblaze.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "jellyblze.cloudsit.app",
+    "url": "https://jellyblze.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "jellyblze.dannygc.cloud",
+    "url": "https://jellyblze.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "kb.dannygc.cloud",
+    "url": "https://kb.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "lab.dannygc.cloud",
+    "url": "https://lab.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "mediastudio.cloudsit.app",
+    "url": "https://mediastudio.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "metascrub.cloudsit.app",
+    "url": "https://metascrub.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "metascrub.dannygc.cloud",
+    "url": "https://metascrub.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "mysteryproject.dannygc.cloud",
+    "url": "https://mysteryproject.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "mysteryproject.org",
+    "url": "https://mysteryproject.org/",
+    "expect": "."
+  },
+  {
+    "host": "nemotron.dannygc.cloud",
+    "url": "https://nemotron.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "nexus.cloudsit.app",
+    "url": "https://nexus.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "nexus.dannygc.cloud",
+    "url": "https://nexus.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "nimbus.dannygc.cloud",
+    "url": "https://nimbus.dannygc.cloud/",
+    "expect": "NIMBUS|Empire Monitor|Nimbus"
+  },
+  {
+    "host": "ollama.dannygc.cloud",
+    "url": "https://ollama.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "ops.dannygc.cloud",
+    "url": "https://ops.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "pear.dannygc.cloud",
+    "url": "https://pear.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "phantom.cloudsit.app",
+    "url": "https://phantom.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "phantom.dannygc.cloud",
+    "url": "https://phantom.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "portalbiz.cloudsit.app",
+    "url": "https://portalbiz.cloudsit.app/",
+    "expect": "Portal Biz|Business"
+  },
+  {
+    "host": "portalbiz.dannygc.cloud",
+    "url": "https://portalbiz.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "premium.dannygc.cloud",
+    "url": "https://premium.dannygc.cloud/",
+    "expect": "Nimbus Premium"
+  },
+  {
+    "host": "projects.cloudsit.app",
+    "url": "https://projects.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "protect.dannygc.cloud",
+    "url": "https://protect.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "queendar.cloudsit.app",
+    "url": "https://queendar.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "queendar.dannygc.cloud",
+    "url": "https://queendar.dannygc.cloud/",
+    "expect": "Queendar"
+  },
+  {
+    "host": "qwen.dannygc.cloud",
+    "url": "https://qwen.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "reports.cloudsit.app",
+    "url": "https://reports.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "requests.cloudsit.app",
+    "url": "https://requests.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "requests.dannygc.cloud",
+    "url": "https://requests.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "sanitizer.cloudsit.app",
+    "url": "https://sanitizer.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "search-api.cloudsit.app",
+    "url": "https://search-api.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "search-api.dannygc.cloud",
+    "url": "https://search-api.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "search.cloudsit.app",
+    "url": "https://search.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "search.dannygc.cloud",
+    "url": "https://search.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "sentinel.cloudsit.app",
+    "url": "https://sentinel.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "sentinel.dannygc.cloud",
+    "url": "https://sentinel.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "services.dannygc.cloud",
+    "url": "https://services.dannygc.cloud/",
+    "expect": "NIMBUS|Empire Monitor|Nimbus"
+  },
+  {
+    "host": "shield.dannygc.cloud",
+    "url": "https://shield.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "shredder.dannygc.cloud",
+    "url": "https://shredder.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "social.cloudsit.app",
+    "url": "https://social.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "social.dannygc.cloud",
+    "url": "https://social.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "speakit.dannygc.cloud",
+    "url": "https://speakit.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "stratus.cloudsit.app",
+    "url": "https://stratus.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "stratus.dannygc.cloud",
+    "url": "https://stratus.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "systems.dannygc.cloud",
+    "url": "https://systems.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "team.cloudsit.app",
+    "url": "https://team.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "timesaver.cloudsit.app",
+    "url": "https://timesaver.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "timesaver.dannygc.cloud",
+    "url": "https://timesaver.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "vault.cloudsit.app",
+    "url": "https://vault.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "video.cloudsit.app",
+    "url": "https://video.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "video.dannygc.cloud",
+    "url": "https://video.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "voice.dannygc.cloud",
+    "url": "https://voice.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "watch.cloudsit.app",
+    "url": "https://watch.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "watch.dannygc.cloud",
+    "url": "https://watch.dannygc.cloud/",
+    "expect": "."
+  },
+  {
+    "host": "weaver.cloudsit.app",
+    "url": "https://weaver.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "webhooks.cloudsit.app",
+    "url": "https://webhooks.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "www.cloudsit.app",
+    "url": "https://www.cloudsit.app/",
+    "expect": "."
+  },
+  {
+    "host": "www.dannyk.online",
+    "url": "https://www.dannyk.online/",
+    "expect": "."
+  },
+  {
+    "host": "www.mysteryproject.org",
+    "url": "https://www.mysteryproject.org/",
+    "expect": "."
+  },
+  {
+    "host": "xray.cloudsit.app",
+    "url": "https://xray.cloudsit.app/",
+    "expect": "."
+  }
+]
