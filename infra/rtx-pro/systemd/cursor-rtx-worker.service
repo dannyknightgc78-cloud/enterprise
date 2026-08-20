@@ -1,0 +1,17 @@
+[Unit]
+Description=Cursor Self-Hosted Pool worker (RTX Pro relay)
+After=network-online.target nemotron-stack.service
+Wants=nemotron-stack.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+WorkingDirectory=/opt/cursor-workers/enterprise
+EnvironmentFile=/opt/cursor-workers/enterprise/infra/rtx-pro/.env
+ExecStart=/opt/cursor-workers/enterprise/infra/rtx-pro/worker/start-worker.sh
+# Health for orchestrators
+ExecStartPost=/bin/sleep 5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "bash infra/rtx-pro/scripts/hook-gpu-relay.sh"
+      }
+    ]
+  }
+}
