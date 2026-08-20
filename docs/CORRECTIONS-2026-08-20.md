@@ -33,10 +33,16 @@
 - **Verify:** title `Ghost Home`; `/api/health` → 200.
 
 ## Lead scraper + bulk emailer (24/7 → 50 good/day)
-- **Services always-on:** `lead-scraper`, `lead-feeder`, `auto-emailer`, `batch-emailer` (`Restart=always`).
+- **Services always-on:** `lead-scraper`, `lead-feeder`, `auto-emailer`, `batch-emailer`, `bulk-campaign-auto` (`Restart=always`).
 - **Quota:** feeder targets **50 good leads/day** (`score>=0.62`, role/corporate, junk filtered). Sleeps when quota met.
 - **Feeder v4:** curated UK seed bank + Bing (+ Brave/crt best-effort). DDG abandoned (dead).
 - **Quality:** drop sentry/wixpress/noreply; higher score gate; RTX scoring URL `127.0.0.1:18001`.
 - **Email:** premium HTML with Portal gallery/home/pricing links + clear **Unsubscribe** CTA; List-Unsubscribe header.
-- **Sync:** hourly → batch-emailer contacts + portal CRM script.
+- **Auto send max (2026-08-20):**
+  - `auto-emailer` v4: Brevo **HTTP API**, up to **80/run**, loop **90s**, role prefixes only, junk purge.
+  - `batch-emailer` uses Brevo API (SMTP login on this account returns 535; API path works).
+  - `bulk-campaign-auto`: continuous campaign drain of unsent contacts every **180s** (`skip_sent=true`).
+  - `lead-sync.timer`: sync good leads into mailer contacts every **15 min**.
+- **Nimbus:** leads endpoints intentionally **not** shown in Nimbus Live.
 - **Report:** `python3 /root/lead-scraper/daily-quota-report.py`
+- **Constraint:** Brevo free plan / daily send capacity is the hard ceiling (blocked/deferred show in aggregated report).
