@@ -20,6 +20,10 @@
 - `route_guard` → `guard-hostman-routing.sh`
 - **Route guard false alarm (2026-08-20):** watchdog-agent Docker was probing `127.0.0.1` (empty in-container) → `Connection refused` / “portal misrouted” for `cloud` + `dashboard` even while public sites returned 200. Fixed: `ROUTE_GUARD_ORIGIN=http://host.docker.internal`, bind-mounted `route_guard.py`, browser UA, bash guard Python fallback (no curl in image), mount `/etc/nginx:ro`. Sites themselves were fine (CloudIt `:8816`, Hub `:3012`).
 
+## cloudflared max-restarts alert (2026-08-20)
+- **Cause:** two systemd connectors on the **same** tunnel `8cc6cd76…` (`cloudflared.service` + `cloudflared-mysteryproject.service`) with conflicting ingress → exits / restart storms. Watchdog then alerted “Manual fix needed: cloudflared” (compose advice is wrong — Hostman uses systemd, not docker compose).
+- **Fix:** keep a single unit `cloudflared.service` (`/etc/cloudflared/config.yml`, `--protocol http2`); **mask** `cloudflared-mysteryproject`; add `cloudflared*` to `WATCH_EXCLUDE`; stop heal scripts from restarting the duplicate.
+
 ## Site audit snapshot
 - 111 hostnames probed; ~50 OK titles; many legacy product hostnames still serve lab SPA titled C.A.R.L. via `:4173`/`:8788` (portalbiz stubs, glucose/arthritis SPA shell, etc.) — not Sentinel.
 
