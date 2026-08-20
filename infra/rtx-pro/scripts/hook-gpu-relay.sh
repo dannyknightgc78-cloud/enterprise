@@ -16,7 +16,7 @@ read_mode() {
   if [[ -f "${MODE_FILE}" ]]; then
     cat "${MODE_FILE}" | tr -d '[:space:]'
   else
-    echo "local"
+    echo "hybrid"
   fi
 }
 
