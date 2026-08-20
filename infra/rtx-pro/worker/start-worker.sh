@@ -5,12 +5,19 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INFRA_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+export PATH="${HOME:-/root}/.local/bin:/usr/local/bin:${PATH}"
 
 # shellcheck source=/dev/null
 [[ -f "${INFRA_DIR}/.env" ]] && source "${INFRA_DIR}/.env"
 
-: "${CURSOR_API_KEY:?Set CURSOR_API_KEY in infra/rtx-pro/.env (service account key)}"
 : "${WORKER_ROOT:?Set WORKER_ROOT in infra/rtx-pro/.env}"
+
+if [[ -n "${CURSOR_API_KEY:-}" ]]; then
+  export CURSOR_API_KEY
+elif ! agent status 2>&1 | grep -qi 'logged in'; then
+  echo "Set CURSOR_API_KEY in ${INFRA_DIR}/.env (service account key) or run: NO_OPEN_BROWSER=1 agent login" >&2
+  exit 1
+fi
 
 POOL_NAME="${CURSOR_WORKER_POOL_NAME:-rtx-pro}"
 LABELS_FILE="${SCRIPT_DIR}/labels.json"
@@ -29,8 +36,6 @@ fi
 
 # Wait for RTX AI (Ollama/NIM) — do not block worker if only tunnel serves models
 bash "${SCRIPT_DIR}/wait-for-ai.sh"
-
-export CURSOR_API_KEY
 
 # MCP + hybrid switcher deps (local Nemotron tools)
 if command -v pip3 >/dev/null 2>&1; then
