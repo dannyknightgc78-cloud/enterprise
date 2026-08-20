@@ -44,6 +44,12 @@ done
 
 export CURSOR_API_KEY
 
+# MCP + hybrid switcher deps (local Nemotron tools)
+if command -v pip3 >/dev/null 2>&1; then
+  pip3 install -q -r "${INFRA_DIR}/mcp/requirements.txt" 2>/dev/null || true
+fi
+echo "hybrid" > "${INFRA_DIR}/.hybrid-mode"
+
 echo "Starting pool worker: pool=${POOL_NAME} name=${WORKER_NAME} root=${WORKER_ROOT}"
 exec agent worker \
   --pool "${POOL_NAME}" \

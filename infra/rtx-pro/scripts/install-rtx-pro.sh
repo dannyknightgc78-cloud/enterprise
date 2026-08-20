@@ -73,7 +73,11 @@ if [[ "${INSTALL_SYSTEMD:-1}" == "1" ]]; then
   echo "Edit /etc/systemd/system/cursor-rtx-worker.service.d/override.conf or use start-worker.sh manually first."
 fi
 
-chmod +x "${INFRA_DIR}/worker/start-worker.sh" "${INFRA_DIR}/scripts/"*.sh
+chmod +x "${INFRA_DIR}/worker/start-worker.sh" "${INFRA_DIR}/scripts/"*.sh "${INFRA_DIR}/mcp/"*.py 2>/dev/null || true
+
+if command -v pip3 >/dev/null 2>&1; then
+  pip3 install -q -r "${INFRA_DIR}/mcp/requirements.txt" || python3 -m pip install -q -r "${INFRA_DIR}/mcp/requirements.txt"
+fi
 
 echo ""
 echo "Done. Next steps:"

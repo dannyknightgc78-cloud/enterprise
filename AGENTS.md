@@ -1,31 +1,50 @@
-# RTX Pro hybrid relay
+# RTX Pro hybrid relay — type here, execute on GPU, progress streams back
 
-See **[infra/rtx-pro/README.md](infra/rtx-pro/README.md)** for full setup.
+Full setup: **[infra/rtx-pro/README.md](infra/rtx-pro/README.md)**
+
+## Type these in Cursor chat
+
+| You type | What happens |
+|----------|----------------|
+| **`use gpus`** | Switches to local Nemotron on RTX Pro; tools run on pool `rtx-pro` |
+| **`use cursor`** | Switches back to Cursor cloud models (Router) |
+| **`gpu status`** | Shows Nemotron + worker relay state |
+| **`hybrid`** | Auto: Cursor plans, GPU executes/summarizes |
+
+Progress appears inline (🖥️ running → ✅ done) as if you were on the server.
+
+## One-time: boot your RTX Pro (paste in terminal there)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dannyknightgc78-cloud/enterprise/cursor/rtx-pro-hybrid-relay-4fb3/infra/rtx-pro/scripts/bootstrap.sh | bash
+```
+
+Then edit `/opt/cursor-workers/enterprise/infra/rtx-pro/.env`:
+- `NGC_API_KEY` — NVIDIA NGC
+- `CURSOR_API_KEY` — **service account** key (Dashboard → Service Accounts)
+
+Restart worker:
+```bash
+cd /opt/cursor-workers/enterprise/infra/rtx-pro && bash worker/start-worker.sh
+```
+
+## Start Cloud Agents on GPU pool
+
+- Dashboard: worker selector → **`rtx-pro`**
+- Or include in prompt: **`use gpus`** (hooks auto-switch to local AI)
+
+## MCP tools (on worker)
+
+- `gpu_status` — relay health
+- `set_hybrid_mode` — `cursor` | `local` | `hybrid`
+- `ask_local_ai` — Nemotron 3.5 on GPU
+- `relay_progress` — live server-style log
 
 ## Cursor Cloud Agent instructions
 
-When running as a Cloud Agent for this repo, prefer the **RTX Pro self-hosted pool** so tool execution (shell, git, builds) runs on local GPUs instead of Cursor-managed VMs.
+When running as a Cloud Agent for this repo:
 
-### Trigger self-hosted pool
-
-- Dashboard: worker selector → pool **`rtx-pro`**
-- GitHub comment: `@cursoragent pool=rtx-pro <task>`
-- Slack: `@Cursor pool=rtx-pro <task>`
-
-### Model routing (token savings)
-
-- Use **Auto → Cost** in the model picker for Cursor Router (Teams/Enterprise).
-- Hard multi-step planning stays on frontier models in the cloud.
-- High-volume execution inference on the worker box uses **Nemotron 3.5 Lightning** via `http://127.0.0.1:4000/v1` (LiteLLM model `execution`).
-
-### Prerequisites on RTX Pro
-
-1. `infra/rtx-pro/.env` with `NGC_API_KEY` and `CURSOR_API_KEY` (service account)
-2. `docker compose up -d` in `infra/rtx-pro/`
-3. `bash infra/rtx-pro/worker/start-worker.sh` running under systemd or tmux
-
-### Verify relay
-
-```bash
-bash infra/rtx-pro/scripts/preflight.sh
-```
+1. On first turn, call MCP `gpu_status`. If not ready, give user the bootstrap curl command above.
+2. Honor user mode switches (`use gpus` / `use cursor`).
+3. Prefer pool **`rtx-pro`** for all tool execution.
+4. Use **Auto → Cost** for Cursor-side inference when in cursor/hybrid mode.

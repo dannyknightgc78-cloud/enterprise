@@ -1,0 +1,37 @@
+---
+description: Hybrid GPU relay — type "use gpus" to run on RTX Pro and switch between Cursor AI and local Nemotron
+alwaysApply: true
+---
+
+# Hybrid GPU relay (RTX Pro)
+
+You operate in a **hybrid** setup: Cursor cloud plans and routes; an RTX Pro worker executes tools and runs **Nemotron 3.5** locally.
+
+## User commands (natural language)
+
+| User says | Action |
+|-----------|--------|
+| `use gpus`, `use gpu`, `[gpu]`, `switch to local`, `my ai` | Call MCP `set_hybrid_mode("local")`, then `gpu_status`. Route execution/summaries through `ask_local_ai`. |
+| `[cursor]`, `use cursor`, `switch to cursor` | Call MCP `set_hybrid_mode("cursor")`. Use Cursor Router (Auto Cost) for inference. |
+| `hybrid`, `auto`, `both` | Call MCP `set_hybrid_mode("hybrid")` — plan on Cursor, execute summaries on GPU when cheap. |
+| `gpu status`, `relay status` | Call MCP `gpu_status` and `relay_progress`. |
+
+## Every turn when GPU mode is active
+
+1. Call `gpu_status` once at the start (shows progress as server-side relay).
+2. Before heavy shell work, call `relay_progress` if the user asked for live updates.
+3. If `gpu_status.ready` is false, tell the user to run the bootstrap one-liner on RTX Pro (see AGENTS.md) — do not pretend tools ran on GPU.
+
+## Model routing
+
+- **cursor mode**: Cursor cloud models only (Grok/Composer/Router). Tools still run on pool `rtx-pro` when worker is online.
+- **local mode**: Prefer `ask_local_ai` for summaries, refactors of routine code, test output compression.
+- **hybrid mode** (default): Cursor for planning and hard reasoning; Nemotron for high-volume execution text.
+
+## Pool routing
+
+Cloud Agents for this repo must use self-hosted pool **`rtx-pro`**. If you are on a managed cloud VM without the worker, state that clearly and give the bootstrap command.
+
+## Progress
+
+Hooks on the worker emit `agent_message` progress (🖥️ running / ✅ done). Surface the same via `relay_progress` when the user wants a live feed.

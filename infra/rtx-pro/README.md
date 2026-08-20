@@ -27,19 +27,30 @@ Route **Cloud Agent tool execution** to your RTX Pro box while keeping **Cursor 
 | Tool execution | RTX Pro worker | No cloud VM compute; local builds/tests |
 | Execution inference | Nemotron 3.5 local | No per-token API billing |
 
-## Quick start (on RTX Pro)
+## Quick start (on RTX Pro) — one command
 
 ```bash
-git clone https://github.com/dannyknightgc78-cloud/enterprise.git /opt/cursor-workers/enterprise
-cd /opt/cursor-workers/enterprise/infra/rtx-pro
-
-cp .env.example .env
-# Edit: NGC_API_KEY, CURSOR_API_KEY (service account)
-
-bash scripts/install-rtx-pro.sh
-bash scripts/preflight.sh
-bash worker/start-worker.sh
+curl -fsSL https://raw.githubusercontent.com/dannyknightgc78-cloud/enterprise/cursor/rtx-pro-hybrid-relay-4fb3/infra/rtx-pro/scripts/bootstrap.sh | bash
 ```
+
+Then set keys in `/opt/cursor-workers/enterprise/infra/rtx-pro/.env` and restart the worker.
+
+Manual path:
+
+```bash
+git clone -b cursor/rtx-pro-hybrid-relay-4fb3 https://github.com/dannyknightgc78-cloud/enterprise.git /opt/cursor-workers/enterprise
+cd /opt/cursor-workers/enterprise/infra/rtx-pro
+cp .env.example .env   # NGC_API_KEY + CURSOR_API_KEY (service account)
+bash scripts/install-rtx-pro.sh && bash worker/start-worker.sh
+```
+
+## Type in Cursor chat
+
+| Command | Effect |
+|---------|--------|
+| `use gpus` | Local Nemotron on RTX Pro + pool `rtx-pro` |
+| `use cursor` | Cursor cloud Router models |
+| `gpu status` | Relay health + progress |
 
 ## Cursor dashboard (one-time admin)
 
