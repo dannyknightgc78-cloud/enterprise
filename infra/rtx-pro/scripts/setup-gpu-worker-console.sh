@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# === PASTE THIS ENTIRE FILE IN HOSTMAN CONSOLE (root@172.236.195.90) ===
+# === PASTE ON YOUR RTX SERVER (root@172.236.195.90) — SSH or provider console ===
 # Sets up Cursor GPU pool worker rtx-pro. Pass key inline:
 #   CURSOR_API_KEY='key_...' bash -s  <(curl -fsSL https://raw.githubusercontent.com/dannyknightgc78-cloud/enterprise/main/infra/rtx-pro/scripts/setup-gpu-worker-console.sh)
 # Or paste block below after editing CURSOR_API_KEY line.

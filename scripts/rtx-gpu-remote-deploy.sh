@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SSH to Hostman RTX Pro (172.236.195.90) and install GPU relay + Cursor worker.
+# SSH to RTX Pro (172.236.195.90) and install GPU relay + Cursor worker.
 set -euo pipefail
 
 RTX_HOST="${RTX_HOST:-172.236.195.90}"
@@ -11,7 +11,7 @@ REPO="${CURSOR_GPU_REPO:-https://github.com/dannyknightgc78-cloud/enterprise.git
 echo "==> RTX GPU remote deploy → ${RTX_USER}@${RTX_HOST}"
 
 if ! ssh "${SSH_OPTS[@]}" "${RTX_USER}@${RTX_HOST}" 'echo connected'; then
-  echo "SSH blocked. Paste this ONE block in Hostman web console (root shell):"
+  echo "SSH blocked. Paste this ONE block in an SSH/root shell on the RTX server (172.236.195.90):"
   echo
   cat <<'CONSOLE'
 PUB='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGh5uzhhDMuW+reaCiInxGD2EetWAK+QyxnW0TFnvxeu cursor-cloud-agent'

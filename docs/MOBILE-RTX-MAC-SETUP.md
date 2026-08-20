@@ -12,7 +12,7 @@
 
 1. Install **[Cursor for iOS](https://apps.apple.com/app/cursor/id6767085653)** and sign in.
 2. Dashboard → **Cloud Agents → Self-Hosted → Allow Self-Hosted Agents**.
-3. Complete GPU worker on RTX (one-time Hostman console paste — see below).
+3. Complete GPU worker on RTX (one-time SSH paste on the RTX box — see below).
 4. In the **mobile app**, start an agent on repo `enterprise`:
    - Pick worker: **Self-Hosted Pool → `rtx-pro`**
    - Branch: `main`
@@ -34,12 +34,16 @@ Your Mac is **not** the GPU worker unless you choose that.
 
 Mac and mobile share the same agents at [cursor.com/agents](https://cursor.com/agents).
 
-## One-time: GPU worker (Hostman console)
+## One-time: GPU worker (SSH on your RTX server)
+
+SSH as root (or sudo) on **`172.236.195.90`** — your RTX box, not a separate cloud panel — then paste:
 
 ```bash
 export CURSOR_API_KEY='YOUR_SERVICE_ACCOUNT_KEY'
 curl -fsSL https://raw.githubusercontent.com/dannyknightgc78-cloud/enterprise/main/infra/rtx-pro/scripts/setup-gpu-worker-console.sh | bash
 ```
+
+If SSH is not set up yet, use whatever console your provider gives (serial/VNC/web terminal) to get a root shell on that same machine.
 
 Service account key: **Dashboard → Service Accounts** (Enterprise).
 
