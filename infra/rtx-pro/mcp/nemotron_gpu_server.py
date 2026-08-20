@@ -16,11 +16,26 @@ ROOT = Path(__file__).resolve().parents[2]
 MODE_FILE = ROOT / ".hybrid-mode"
 PROGRESS_LOG = Path("/tmp/cursor-gpu-relay-progress.log")
 
+RTX_AI_BASE = os.environ.get("RTX_AI_BASE", "https://ai.dannygc.cloud/v1").rstrip("/")
+RTX_AI_MODEL = os.environ.get("RTX_AI_MODEL", "nemotron-3.5-lightning:latest")
 LITELLM_URL = os.environ.get(
     "LITELLM_URL", "http://127.0.0.1:4000/v1/chat/completions"
 )
 LITELLM_KEY = os.environ.get("LITELLM_MASTER_KEY", "sk-rtx-local")
 NIM_URL = os.environ.get("NIM_HEALTH_URL", "http://127.0.0.1:8000/v1/models")
+
+
+def _resolve_chat_url() -> tuple[str, str, str]:
+    """Return (url, api_key, model) — local LiteLLM first, then RTX tunnel."""
+    if _http_ok(LITELLM_URL.replace("/v1/chat/completions", "/health/liveliness"), 1.5):
+        return LITELLM_URL, LITELLM_KEY, os.environ.get("LITELLM_MODEL", "execution")
+    if _http_ok(f"{RTX_AI_BASE}/models", 3.0):
+        return (
+            f"{RTX_AI_BASE}/chat/completions",
+            os.environ.get("RTX_AI_KEY", "ollama"),
+            RTX_AI_MODEL,
+        )
+    return LITELLM_URL, LITELLM_KEY, "execution"
 
 mcp = FastMCP("nemotron-gpu")
 
@@ -63,6 +78,7 @@ def gpu_status() -> str:
     """Check RTX Pro relay: Nemotron NIM, LiteLLM, hybrid mode, and worker health."""
     nim = _http_ok(NIM_URL)
     litellm = _http_ok(LITELLM_URL.replace("/v1/chat/completions", "/health/liveliness"))
+    tunnel = _http_ok(f"{RTX_AI_BASE}/models", 3.0)
     mode = _read_mode()
     gpu_name = "unknown"
     try:
@@ -81,10 +97,13 @@ def gpu_status() -> str:
         "hardware": gpu_name,
         "nemotron_nim": nim,
         "litellm_gateway": litellm,
+        "rtx_tunnel": tunnel,
+        "rtx_ai_base": RTX_AI_BASE,
         "hybrid_mode": mode,
         "pool": os.environ.get("CURSOR_WORKER_POOL_NAME", "rtx-pro"),
         "progress_log": str(PROGRESS_LOG),
-        "ready": nim and litellm,
+        "ready": (nim and litellm) or tunnel,
+        "path": "local" if (nim and litellm) else ("tunnel" if tunnel else "offline"),
     }
     _log_progress(f"gpu_status ready={status['ready']} mode={mode}")
     return json.dumps(status, indent=2)
@@ -118,16 +137,18 @@ def ask_local_ai(prompt: str, model: str = "execution") -> str:
             }
         )
 
-    _log_progress(f"ask_local_ai model={model} chars={len(prompt)}")
+    chat_url, api_key, routed_model = _resolve_chat_url()
+    use_model = model if chat_url == LITELLM_URL else RTX_AI_MODEL
+    _log_progress(f"ask_local_ai model={use_model} via {chat_url} chars={len(prompt)}")
     try:
+        headers = {"Content-Type": "application/json"}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
         r = httpx.post(
-            LITELLM_URL,
-            headers={
-                "Authorization": f"Bearer {LITELLM_KEY}",
-                "Content-Type": "application/json",
-            },
+            chat_url,
+            headers=headers,
             json={
-                "model": model,
+                "model": use_model,
                 "messages": [{"role": "user", "content": prompt}],
                 "temperature": 1.0,
                 "top_p": 0.95,
@@ -137,9 +158,10 @@ def ask_local_ai(prompt: str, model: str = "execution") -> str:
         )
         r.raise_for_status()
         data = r.json()
-        content = data["choices"][0]["message"]["content"]
+        msg = data["choices"][0]["message"]
+        content = msg.get("content") or msg.get("reasoning") or ""
         _log_progress("ask_local_ai done")
-        return content
+        return content.strip() or json.dumps(msg)[:500]
     except Exception as e:
         _log_progress(f"ask_local_ai error: {e}")
         return json.dumps({"error": str(e), "hint": "Run: cd infra/rtx-pro && docker compose up -d"})

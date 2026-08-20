@@ -1,5 +1,15 @@
 # RTX Pro hybrid relay — type here, execute on GPU, progress streams back
 
+## Live status (checked from cloud)
+
+| Path | Status |
+|------|--------|
+| **Nemotron on RTX** via `https://ai.dannygc.cloud/v1` | **LIVE** (`nemotron-3.5-lightning:latest`) |
+| **SSH** `root@172.236.195.90` | **Blocked** — authorize key on box |
+| **Pool worker** `rtx-pro` | **Not running** until SSH + `CURSOR_API_KEY` |
+
+Cloud agents can use **your RTX Nemotron now** via tunnel when you say `use gpus` (MCP `ask_local_ai` → `ai.dannygc.cloud`). Tool execution (shell/git) still needs the pool worker on the box.
+
 Full setup: **[infra/rtx-pro/README.md](infra/rtx-pro/README.md)**
 
 ## Type these in Cursor chat
