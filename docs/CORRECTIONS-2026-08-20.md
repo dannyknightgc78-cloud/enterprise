@@ -54,14 +54,17 @@
 - `@Nimbusfixbot` accepts normal language: status, ghosts fix, services monitor, quiet route-guard, full scan, heal, etc.
 - Help `/commands` lists Plain English examples first.
 
-## landing.dannygc.cloud (was missing)
-- **Cause:** no DNS record, no nginx vhost, no tunnel ingress.
-- **Fix (2026-08-21):** Hostman nginx `landing.dannygc.cloud` → `/opt/portal-biz/public/landing.html` (Portal Biz gallery) + `/api/` → `:4400`. DNS CNAME + Hostman tunnel `8cc6cd76-…`.
-- **Verify:** title `Portal Biz — Product Gallery`, HTTP 200.
+## landing.dannygc.cloud (was missing → was gallery → homepage)
+- **Cause:** no DNS/vhost; first restore served `/public/landing.html` **product gallery** (wrong).
+- **Correct:** same Portal Biz **Business Suite** homepage as `portalbiz.cloudsit.app` (`:4400`).
+- **Gallery** stays at `https://portalbiz.cloudsit.app/public/landing.html`.
+- **Verify:** title `Portal Biz — Business Suite`, HTTP 200.
 
 ## G7 vs RTX Pro (AI / load)
 - **RTX Pro** `172.236.195.90` **is** the live AI: 2× RTX PRO 6000 Blackwell (~96GB). Hostman SSH tunnel `:18000` → vLLM **Qwen3-VL-30B**, `:18001` → Ollama **nemotron-3.5-lightning** + **qwen2.5vl:7b**. Public `ai`/`api`/`nemotron`/`qwen`/`ollama.dannygc.cloud` hit `:18001`.
 - **USA G7** `172.233.177.166`: 50 CPU / 125GB RAM / 2.5TB, **no GPU**, nginx off, idle. Fine as a **web origin replica / failover**, not GPU load-balance. AI stays on RTX Pro.
+
+## Lead scraper + bulk emailer (24/7)
 - **Services always-on:** `lead-scraper`, `lead-feeder`, `auto-emailer`, `batch-emailer`, `bulk-campaign-auto` (`Restart=always`).
 - **Leads keep collecting:** feeder stockpile target **500 good/day** (`score>=0.62`). Continues even when email is capped.
 - **Email hard cap (2026-08-21):** **`EMAIL_DAILY_MAX=300`** (UTC day) across auto-emailer + batch/bulk.
