@@ -15,11 +15,18 @@
 - `black-alert.json` `ai_target=rtx-pro` (not trooper)
 - `inventory-sync/inventory.json` synced without live trooper/vultr hosts
 - `route_guard` → `guard-hostman-routing.sh`
-- **Route guard false alarm (2026-08-20):** watchdog-agent Docker was probing `127.0.0.1` (empty in-container) → `Connection refused` / “portal misrouted” for `cloud` + `dashboard` even while public sites returned 200. Fixed: `ROUTE_GUARD_ORIGIN=http://host.docker.internal`, bind-mounted `route_guard.py`, browser UA, bash guard Python fallback (no curl in image), mount `/etc/nginx:ro`. Sites themselves were fine (CloudIt `:8816`, Hub `:3012`).
+- **Route guard false alarm (2026-08-20 → 2026-08-21):** watchdog-agent Docker was probing `127.0.0.1` (empty in-container) → `Connection refused` / “portal misrouted” for `cloud` + `dashboard` even while public sites returned 200. Fixed: `ROUTE_GUARD_ORIGIN=http://195.133.93.104`, `ROUTE_GUARD_TELEGRAM=0` (default), bind-mounted `route_guard.py` + `monitor.py` (monitor also requires explicit Telegram opt-in), browser UA, bash guard default origin Hostman IP, debounce. Sites themselves were fine (CloudIt `:8816`, Hub `:3012`).
 
-## cloudflared max-restarts alert (2026-08-20)
+## cloudflared max-restarts alert (2026-08-20 → hardened 2026-08-21)
 - **Cause:** two systemd connectors on the **same** tunnel `8cc6cd76…` (`cloudflared.service` + `cloudflared-mysteryproject.service`) with conflicting ingress → exits / restart storms. Watchdog then alerted “Manual fix needed: cloudflared” (compose advice is wrong — Hostman uses systemd, not docker compose).
-- **Fix:** keep a single unit `cloudflared.service` (`/etc/cloudflared/config.yml`, `--protocol http2`); **mask** `cloudflared-mysteryproject`; add `cloudflared*` to `WATCH_EXCLUDE`; stop heal scripts from restarting the duplicate.
+- **Also (2026-08-21):** `/root/lab-dannygc/.env` `WATCH_EXCLUDE` **overrode** compose defaults and **omitted** `cloudflared*`, so watchdog still tried docker-heal on tunnel name → max-restarts Telegram pages. Heal cron `heal-hostman-services.sh` defaulted `LAB_ROOT` to a **Mac path** and blindly `systemctl restart cloudflared` on public degrade.
+- **Fix:**
+  - keep a single unit `cloudflared.service` (`/etc/cloudflared/config.yml`, `--protocol http2`); **mask** `cloudflared-mysteryproject`
+  - `WATCH_EXCLUDE` includes `cloudflared,cloudflared-cloudme,cloudflared-mysteryproject,cloudflared-lab`
+  - `config.is_excluded_container` hard-skips any `cloudflared*` name
+  - heal cron: `LAB_ROOT=/root/lab-dannygc`; only **start if inactive** (no restart spam)
+  - unit: `StartLimitIntervalSec` under `[Unit]` (not `[Service]`)
+- **Live:** `cloudflared` active since 2026-08-20; mysteryproject masked; sites `cloud`/`dashboard` HTTP 200.
 
 ## Site audit snapshot
 - 111 hostnames probed; ~50 OK titles; many legacy product hostnames still serve lab SPA titled C.A.R.L. via `:4173`/`:8788` (portalbiz stubs, glucose/arthritis SPA shell, etc.) — not Sentinel.

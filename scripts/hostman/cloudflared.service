@@ -1,0 +1,18 @@
+[Unit]
+Description=Cloudflare Tunnel (Hostman empire — 8cc6cd76)
+After=network-online.target nginx.service
+Wants=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/cloudflared --no-autoupdate tunnel --protocol http2 --config /etc/cloudflared/config.yml run
+Restart=always
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=20
+User=root
+
+[Install]
+WantedBy=multi-user.target
