@@ -34,14 +34,16 @@
 ## GhostGrid / vault / RTX (earlier)
 - ABX key restored; vault admin open; RTX hybrid CLI wired.
 
-## Ghosts (urgent — was wrong → fixed)
+## Ghosts (urgent — was wrong → fixed → Hostman fallback 2026-08-21)
 - **Wrong:** Hostman A → `/opt/g7-home` `:3015` (G7 Command Centre).
-- **Correct:** Mac **home-edge** tunnel `518d4da0-…` → `127.0.0.1:8850` (**Ghost Home**).
-- **Fix:** DNS CNAME `ghosts` → `518d4da0-ca44-4df1-a759-6a2941c61d4f.cfargotunnel.com` (proxied). Disabled Hostman ghosts vhost (`ghosts…conf.disabled-ghosthome-20260820`).
-- **G7** moved to `g7.dannygc.cloud` → Hostman `:3015`.
-- **Live verify (2026-08-20):** title `Ghost Home`; health `platform=mac+phone`, `aether_ready=true`.
-- **Telegram:** plain English “fix ghosts home” / “why is ghosts home not fixed” → probe + auto-repair DNS/nginx if misrouted.
-- If a phone still shows G7: hard-refresh / clear Cloudflare cache — edge is already Ghost Home.
+- **Correct (Mac):** home-edge tunnel `518d4da0-…` → `127.0.0.1:8850` (**Ghost Home**).
+- **2026-08-21:** home-edge went **down** (0 connections) → public **530/1033**. Served cached **Ghost Home** on Hostman (`/var/www/ghost-home`), moved hostname onto Hostman tunnel `8cc6cd76-…`, removed from dead home-edge ingress. Health: `platform=hostman-fallback`.
+- **Restore Mac later:** start home-edge cloudflared on Mac, CNAME `ghosts` back to `518d4da0….cfargotunnel.com`, remove Hostman ingress rule.
+- **G7** stays on `g7.dannygc.cloud` only.
+
+## Live heal Telegram spam (2026-08-21)
+- `@Nimbusfixbot` was paging every failed live heal (genie/butler/gpu) including Trooper `fix-empire-tunnel.sh` output and Mac-path errors.
+- **Fix:** `NIMBUS_LIVE_HEAL_TELEGRAM=0` (default); only Hostman may live-heal; GPU heal uses `trooper-ai-tunnel` not Trooper tunnel script; Telegram only on success if explicitly enabled; longer cooldowns.
 
 ## Nimbus / services monitor (bigger board)
 - `nimbus.dannygc.cloud` + `services.dannygc.cloud` → Hostman `:3099` (`/opt/nimbus-live`).
