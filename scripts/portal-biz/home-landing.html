@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Biz — Business Suite</title>
+  <meta name="description" content="Portal Biz — the black-and-gold operating suite for serious operators. CRM, contracts, leads, billing, and 36 tools in one place." />
+  <meta name="theme-color" content="#070b14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070b14;
+      --surface: #0f1628;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #c9a962;
+      --accent-soft: #e4d09a;
+      --card: rgba(15, 22, 40, 0.82);
+      --border: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: Syne, system-ui, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+    .orb-a {
+      width: 42vw; height: 42vw; top: -12%; left: -8%;
+      background: color-mix(in srgb, var(--accent) 28%, transparent);
+    }
+    .orb-b {
+      width: 36vw; height: 36vw; bottom: -10%; right: -6%;
+      background: color-mix(in srgb, var(--accent) 18%, #1a1408);
+      animation-delay: -6s;
+      animation-duration: 22s;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(4%, 6%) scale(1.12); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent); }
+      50% { box-shadow: 0 0 28px 4px color-mix(in srgb, var(--accent) 28%, transparent); }
+    }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes floatY {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+    nav, main, footer { position: relative; z-index: 1; }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 11, 20, 0.72);
+    }
+    .brand {
+      font-weight: 800;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-left: 0.85rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+    nav .pill {
+      background: var(--accent);
+      color: #070b14;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      animation: pulseGlow 3.2s ease-in-out infinite;
+    }
+    .hero {
+      text-align: center;
+      padding: min(18vh, 7rem) 1.25rem 2rem;
+      max-width: 920px;
+      margin: 0 auto;
+      min-height: calc(100vh - 4.5rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero > * { animation: fadeUp 0.7s ease both; }
+    .hero .mark { animation-delay: 0.05s; }
+    .hero h1 { animation-delay: 0.15s; }
+    .hero .lead { animation-delay: 0.28s; }
+    .hero .actions { animation-delay: 0.4s; }
+    .hero .visual { animation-delay: 0.5s; }
+    .mark {
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(3rem, 9vw, 5.2rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.1rem;
+      background: linear-gradient(120deg, #fff 10%, var(--accent-soft) 45%, var(--accent) 90%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 34rem;
+      margin: 0 auto 1.75rem;
+    }
+    .actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.95rem 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: linear-gradient(120deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #fff));
+      background-size: 200% 200%;
+      color: #070b14;
+      animation: shimmer 4s ease infinite alternate;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    .visual {
+      max-width: 720px;
+      margin: 2rem auto 0;
+      height: 170px;
+      position: relative;
+    }
+    .visual-card {
+      position: absolute;
+      inset: 16px 8%;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 18%, var(--surface)), var(--surface));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      animation: floatY 3.5s ease-in-out infinite alternate;
+    }
+    .visual-card::before {
+      content: "";
+      position: absolute;
+      left: 8%; right: 28%; top: 28%;
+      height: 12px;
+      border-radius: 6px;
+      background: color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    .visual-card::after {
+      content: "";
+      position: absolute;
+      left: 8%; width: 48%; bottom: 28%;
+      height: 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      max-width: 1040px;
+      margin: 0 auto 3rem;
+      padding: 0 1.25rem;
+    }
+    .feat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.35rem;
+      animation: fadeUp 0.6s ease both;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .feat:nth-child(1) { animation-delay: 0.15s; }
+    .feat:nth-child(2) { animation-delay: 0.28s; }
+    .feat:nth-child(3) { animation-delay: 0.4s; }
+    .feat:hover {
+      transform: translateY(-4px);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    }
+    .feat h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--accent); }
+    .feat p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+    .cta-band {
+      text-align: center;
+      margin: 0 auto 3rem;
+      padding: 2.5rem 1.25rem;
+      max-width: 720px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent);
+      animation: fadeUp 0.7s 0.25s ease both;
+    }
+    .cta-band h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.85rem;
+      margin-bottom: 0.6rem;
+    }
+    .cta-band p { color: var(--muted); margin-bottom: 1.2rem; }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    @media (max-width: 640px) {
+      nav { padding: 0.9rem 1rem; }
+      .nav-links a:not(.pill) { display: none; }
+      .hero { min-height: auto; padding-top: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
+  <nav>
+    <a class="brand" href="/">Portal Biz</a>
+    <div class="nav-links">
+      <a href="https://portalbiz.cloudsit.app/pricing.html">Pricing</a>
+      <a href="https://portalbiz.cloudsit.app/public/landing.html">Gallery</a>
+      <a class="pill" href="https://portalbiz.cloudsit.app/">Sign in</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <span class="mark">Ghost Grid secured</span>
+      <h1>Portal Biz</h1>
+      <p class="lead">The operating suite for serious operators — CRM, contracts, leads, billing, and thirty-six tools in one black-and-gold stack.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://portalbiz.cloudsit.app/">Open the suite</a>
+        <a class="btn btn-ghost" href="https://portalbiz.cloudsit.app/pricing.html">See pricing</a>
+      </div>
+      <div class="visual" aria-hidden="true"><div class="visual-card"></div></div>
+    </section>
+
+    <section class="features" aria-label="What you get">
+      <article class="feat">
+        <h3>One suite</h3>
+        <p>Pipeline, docs, invoices, and automations without juggling ten logins.</p>
+      </article>
+      <article class="feat">
+        <h3>Product gallery</h3>
+        <p>Thirty-six FillIt-style tools — open any preview and use it live.</p>
+      </article>
+      <article class="feat">
+        <h3>Operator grade</h3>
+        <p>Ghost Grid on the edge, sovereign hosting, built for people who ship.</p>
+      </article>
+    </section>
+
+    <section class="cta-band">
+      <h2>Ready when you are</h2>
+      <p>Sign in to the suite, or browse the gallery first.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://portalbiz.cloudsit.app/">Sign in</a>
+        <a class="btn btn-ghost" href="https://portalbiz.cloudsit.app/public/landing.html">Browse gallery</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Portal Biz ·
+    <a href="https://portalbiz.cloudsit.app/">Suite</a> ·
+    <a href="https://portalbiz.cloudsit.app/pricing.html">Pricing</a> ·
+    <a href="https://portalbiz.cloudsit.app/public/landing.html">Gallery</a>
+  </footer>
+</body>
+</html>

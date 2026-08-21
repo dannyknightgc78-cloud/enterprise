@@ -54,11 +54,13 @@
 - `@Nimbusfixbot` accepts normal language: status, ghosts fix, services monitor, quiet route-guard, full scan, heal, etc.
 - Help `/commands` lists Plain English examples first.
 
-## landing.dannygc.cloud (was missing → was gallery → homepage)
-- **Cause:** no DNS/vhost; first restore served `/public/landing.html` **product gallery** (wrong).
-- **Correct:** same Portal Biz **Business Suite** homepage as `portalbiz.cloudsit.app` (`:4400`).
+## landing.dannygc.cloud (was missing → gallery → suite login → black/gold marketing)
+- **Cause:** no DNS/vhost; restores briefly hit the cyan **product gallery** then the **suite login shell** (wrong colours/layout).
+- **Correct:** black-and-gold marketing home (`/opt/portal-biz/public/home-landing.html`, accent `#c9a962` on `#070b14`) — same visual language as Portal Biz product sites.
+- **Suite login** stays at `https://portalbiz.cloudsit.app/`.
 - **Gallery** stays at `https://portalbiz.cloudsit.app/public/landing.html`.
-- **Verify:** title `Portal Biz — Business Suite`, HTTP 200.
+- **Also:** suite demo button + public pricing restyled to gold (were green/blue leftovers).
+- **Verify:** `https://landing.dannygc.cloud/` shows `<h1>Portal Biz</h1>` + `#c9a962`, HTTP 200.
 
 ## G7 vs RTX Pro (AI / load)
 - **RTX Pro** `172.236.195.90` **is** the live AI: 2× RTX PRO 6000 Blackwell (~96GB). Hostman SSH tunnel `:18000` → vLLM **Qwen3-VL-30B**, `:18001` → Ollama **nemotron-3.5-lightning** + **qwen2.5vl:7b**. Public `ai`/`api`/`nemotron`/`qwen`/`ollama.dannygc.cloud` hit `:18001`.
