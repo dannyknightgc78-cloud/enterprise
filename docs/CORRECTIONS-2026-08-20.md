@@ -28,6 +28,16 @@
   - unit: `StartLimitIntervalSec` under `[Unit]` (not `[Service]`)
 - **Live:** `cloudflared` active since 2026-08-20; mysteryproject masked; sites `cloud`/`dashboard` HTTP 200.
 
+## Empire origin cutover: cloudit1 → fra-1 (2026-08-23)
+- **Cause:** empire tunnel `8cc6cd76…` had **two connectors** (cloudit1 `195.133.93.104` + fra-1 `195.216.168.24`). fra-1 lacked `/var/www/haven`, `/var/www/ghost-home`, and `home-landing.html` → intermittent **Haven/Ghosts 500** and **landing 404** when CF hashed to the empty origin.
+- **User intent:** moved off cloudit1 — old connector must not stay live.
+- **Cutover:**
+  1. Rsynced Haven, Ghost Home, Portal public (+ Nimbus board) cloudit1 → fra-1
+  2. Landing nginx on fra-1 serves static black/gold home + pricing from `/opt/portal-biz/public`
+  3. **Started** `cloudflared` on **fra-1 only**; **stopped + disabled** on cloudit1
+- **Verify:** tunnel info shows single connector origin IP `195.216.168.24`; `landing`/`haven`/`ghosts`/`cloud`/`nimbus` public HTTP 200 with correct titles.
+- **Still on cloudit1 (not tunnel):** DB/apps that were not fully migrated (e.g. full Portal Biz `:4400` Node app — marketing landing is static on fra-1; suite login remains via existing portalbiz routes where configured).
+
 ## Site audit snapshot
 - 111 hostnames probed; ~50 OK titles; many legacy product hostnames still serve lab SPA titled C.A.R.L. via `:4173`/`:8788` (portalbiz stubs, glucose/arthritis SPA shell, etc.) — not Sentinel.
 

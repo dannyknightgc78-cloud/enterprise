@@ -212,7 +212,7 @@
   {
     "host": "haven.dannygc.cloud",
     "url": "https://haven.dannygc.cloud/",
-    "expect": "."
+    "expect": "Haven"
   },
   {
     "host": "health.dannyk.online",
@@ -533,5 +533,10 @@
     "host": "xray.cloudsit.app",
     "url": "https://xray.cloudsit.app/",
     "expect": "."
+  },
+  {
+    "host": "landing.dannygc.cloud",
+    "url": "https://landing.dannygc.cloud/",
+    "expect": "Portal Biz — Business Suite|Business Suite"
   }
 ]
