@@ -37,6 +37,13 @@
 - **Landing:** black/gold static on Hostman `/opt/portal-biz/public/home-landing.html`
 - **Verify:** tunnel info single connector `195.133.93.104`; haven/landing/ghosts/cloud/nimbus HTTP 200.
 
+## Haven Spain LaLiga / Cloudflare IP block (2026-08-23)
+- **Symptom:** phone on Spanish ISP showed Barcelona court / LaLiga / Telefónica block page instead of Haven.
+- **Cause:** `haven.dannygc.cloud` was **Cloudflare-proxied** (orange cloud) → traffic used CF anycast IPs that Spanish ISPs block during match windows. Origin on Hostman was fine.
+- **Fix (tunnels kept):** DNS **A → 195.133.93.104**, **proxied=false** (DNS-only). HTTPS terminated on Hostman nginx with Let’s Encrypt (`/etc/letsencrypt/live/haven.dannygc.cloud/`).
+- **Tunnels unchanged:** empire `cloudflared` still active for AI (`ai`/`api`/`ollama`/… → `:18001` SSH to GPU) and other Hostman hostnames.
+- **Verify:** `https://haven.dannygc.cloud/` → `server: nginx`, title Haven Sanctuary, remote IP Hostman (not `104.21`/`172.67`).
+
 ## Site audit snapshot
 - 111 hostnames probed; ~50 OK titles; many legacy product hostnames still serve lab SPA titled C.A.R.L. via `:4173`/`:8788` (portalbiz stubs, glucose/arthritis SPA shell, etc.) — not Sentinel.
 
