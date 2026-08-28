@@ -54,6 +54,7 @@
 - **Wrong:** Hostman A → `/opt/g7-home` `:3015` (G7 Command Centre).
 - **Correct (Mac):** home-edge tunnel `518d4da0-…` → `127.0.0.1:8850` (**Ghost Home**).
 - **2026-08-21:** home-edge went **down** (0 connections) → public **530/1033**. Served cached **Ghost Home** on Hostman (`/var/www/ghost-home`), moved hostname onto Hostman tunnel `8cc6cd76-…`, removed from dead home-edge ingress. Health: `platform=hostman-fallback`.
+- **2026-08-28:** ghosts **530/1033** again while landing/cloud/nimbus OK → DNS or tunnel route reverted to **dead home-edge** (Mac off). Fix: `bash scripts/hostman/fix-ghosts-hostman.sh` on cloudit main — CNAME → `8cc6cd76….cfargotunnel.com`, re-enable nginx `/var/www/ghost-home`.
 - **Restore Mac later:** start home-edge cloudflared on Mac, CNAME `ghosts` back to `518d4da0….cfargotunnel.com`, remove Hostman ingress rule.
 - **G7** stays on `g7.dannygc.cloud` only.
 

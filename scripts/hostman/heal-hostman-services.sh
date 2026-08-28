@@ -321,7 +321,17 @@ fi
 
 _empire_public_ok "https://lab.dannygc.cloud/" || log "WARN lab.dannygc.cloud degraded"
 _empire_public_ok "https://glucose.dannyk.online/api/health" || log "WARN glucose.dannyk.online degraded"
-_empire_public_ok "https://ghosts.dannygc.cloud/api/health" || log "WARN ghosts.dannygc.cloud degraded (Mac home-edge)"
+if ! _empire_public_ok "https://ghosts.dannygc.cloud/api/health"; then
+  ghosts_code="$(curl -sf -o /dev/null -w '%{http_code}' --max-time 8 "https://ghosts.dannygc.cloud/" 2>/dev/null || echo 000)"
+  if [[ "$ghosts_code" == "530" ]]; then
+    log "ghosts.dannygc.cloud 530/1033 — DNS likely on dead Mac home-edge; run Hostman fallback"
+    if [[ -x "$ROOT/scripts/hostman/fix-ghosts-hostman.sh" ]]; then
+      bash "$ROOT/scripts/hostman/fix-ghosts-hostman.sh" >>"$LOG" 2>&1 || log "WARN fix-ghosts-hostman.sh failed"
+    fi
+  else
+    log "WARN ghosts.dannygc.cloud degraded (HTTP ${ghosts_code})"
+  fi
+fi
 _empire_public_ok "https://fillit.dannygc.cloud/" || log "WARN fillit degraded"
 _empire_public_ok "https://cloudme.cloudsit.app/" || log "WARN cloudme degraded"
 # nimbus-excluded: leads.cloudsit.app (not in Nimbus)

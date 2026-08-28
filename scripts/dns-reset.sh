@@ -106,6 +106,9 @@ upsert_cname dannygc.cloud ollama.dannygc.cloud "$TARGET"
 upsert_cname dannygc.cloud api.dannygc.cloud "$TARGET"
 upsert_cname dannygc.cloud genie.dannygc.cloud "$TARGET"
 
+# Ghost Home (Hostman empire tunnel fallback when Mac home-edge is down)
+upsert_cname dannygc.cloud ghosts.dannygc.cloud "$TARGET"
+
 # Dev / ops
 upsert_cname dannygc.cloud code.dannygc.cloud "$TARGET"
 upsert_cname dannygc.cloud files.dannygc.cloud "$TARGET"
