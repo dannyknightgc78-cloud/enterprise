@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Patch nimbus_telegram.py for stronger Ghosts Home NL + auto-repair."""
+"""DEPRECATED — do NOT run. This patch forces ghosts → dead Mac home-edge.
+
+Use scripts/lib/patch_nimbus_telegram_ghosts_hostman_fallback.py instead.
+"""
 from __future__ import annotations
 
 from pathlib import Path

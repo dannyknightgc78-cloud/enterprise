@@ -56,4 +56,10 @@ grep -qF "$PUB" /root/.ssh/authorized_keys || echo "$PUB" >> /root/.ssh/authoriz
 echo "Authorized Cursor recovery SSH key."
 
 echo
-echo "Next: from Cursor agent, set CF_API_TOKEN + TUNNEL_ID and run ./scripts/dns-reset.sh"
+echo "Next (permanent ghosts + fleet on Hostman):"
+echo "  bash /root/lab-dannygc/scripts/hostman/permanent-fleet-fix.sh"
+echo
+echo "Or DNS-only from anywhere with CF_API_TOKEN:"
+echo "  bash /root/lab-dannygc/scripts/fix-ghosts-dns-remote.sh"
+echo
+echo "Legacy: set CF_API_TOKEN + TUNNEL_ID and run ./scripts/dns-reset.sh"

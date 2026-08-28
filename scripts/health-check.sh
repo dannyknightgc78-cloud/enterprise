@@ -53,7 +53,11 @@ check "Cloud Portal"      "https://cloud.dannygc.cloud"
 check "Hub"               "https://hub.dannygc.cloud"
 check "Main site"         "https://dannygc.cloud"
 
-# AI stack + GhostGrid (urgent)
+# AI / GhostGrid (urgent)
+check "Ghosts Home"       "https://ghosts.dannygc.cloud"
+check "Landing"           "https://landing.dannygc.cloud"
+check "Haven"             "https://haven.dannygc.cloud"
+check "Nimbus"            "https://nimbus.dannygc.cloud"
 check "GhostGrid"         "https://ghostgrid.dannygc.cloud"
 check "GhostGrid warroom" "https://ghostgrid.dannygc.cloud/warroom"
 check "Ollama / AI"       "https://ai.dannygc.cloud"

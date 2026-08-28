@@ -195,6 +195,40 @@ def ops_pulse():
         "g7_host": "g7.dannygc.cloud",
     }
 
+GHOSTS_HEAL_STATE = Path("/var/lib/nimbus-live/ghosts-heal.last")
+GHOSTS_HEAL_COOLDOWN = int(os.environ.get("GHOSTS_HEAL_COOLDOWN_SEC", "900"))
+
+def maybe_auto_heal_ghosts(site_rows):
+    """If Hostman serves Ghost Home locally but public DNS hits dead Mac tunnel (530), fix DNS."""
+    row = next((r for r in site_rows if r.get("host") == "ghosts.dannygc.cloud"), None)
+    if not row:
+        return
+    if row.get("local") != 200 or row.get("public") not in (103, 530):
+        return
+    if "ghost home" not in (row.get("local_title") or "").lower():
+        return
+    now = time.time()
+    try:
+        if GHOSTS_HEAL_STATE.is_file():
+            last = float(GHOSTS_HEAL_STATE.read_text().strip() or "0")
+            if now - last < GHOSTS_HEAL_COOLDOWN:
+                return
+    except Exception:
+        pass
+    script = Path("/root/lab-dannygc/scripts/hostman/fix-ghosts-hostman.sh")
+    if not script.is_file():
+        script = Path("/root/lab-dannygc/scripts/hostman/guard-ghosts-routing.sh")
+    if not script.is_file():
+        append_log({"event": "ghosts_heal_skip", "reason": "no fix script", "at": utc()})
+        return
+    append_log({"event": "ghosts_heal_start", "local": row.get("local"), "public": row.get("public"), "at": utc()})
+    try:
+        subprocess.run(["bash", str(script)], timeout=180, check=False)
+        GHOSTS_HEAL_STATE.parent.mkdir(parents=True, exist_ok=True)
+        GHOSTS_HEAL_STATE.write_text(str(now))
+    except Exception as e:
+        append_log({"event": "ghosts_heal_error", "error": str(e), "at": utc()})
+
 def run_cycle():
     prev = previous_state()
     site_rows = []
@@ -213,6 +247,8 @@ def run_cycle():
             alerts.append(f"🔴 {host} {old}→{status} ({detail})")
         elif old in ("DOWN", "ORIGIN_DOWN", "WRONG_APP") and status == "OK":
             alerts.append(f"🟢 {host} recovered ({detail})")
+
+    maybe_auto_heal_ghosts(site_rows)
 
     for srv in SERVERS:
         res = ssh_probe(srv)
