@@ -1,0 +1,20 @@
+name: Fix ghosts DNS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fix-dns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repoint ghosts to Hostman empire tunnel
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: bash scripts/fix-ghosts-dns-remote.sh
+      - name: Verify public URL
+        run: |
+          sleep 15
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 https://ghosts.dannygc.cloud/)
+          echo "ghosts.dannygc.cloud → HTTP $code"
+          test "$code" = "200"
