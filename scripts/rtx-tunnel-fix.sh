@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fix cloudflared on Hostman RTX Pro 6000 (AI tunnels).
+# Fix cloudflared on RTX Pro 6000 (AI tunnels).
 # Usage:
 #   ./scripts/rtx-tunnel-fix.sh
 #   RTX_HOST=172.236.195.90 RTX_USER=root ./scripts/rtx-tunnel-fix.sh

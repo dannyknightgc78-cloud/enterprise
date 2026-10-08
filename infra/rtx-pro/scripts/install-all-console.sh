@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ONE paste for Hostman console — authorizes Cursor SSH + installs worker + uses existing Ollama/Nemotron.
+# ONE paste on RTX server (SSH or provider console) — authorizes Cursor SSH + installs worker.
 set -euo pipefail
 
 echo "=== Cursor RTX full install ==="
